@@ -1,0 +1,1 @@
+# Audio-Text-Alignment for swiss german speech recognition
