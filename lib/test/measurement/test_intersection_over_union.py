@@ -1,9 +1,13 @@
 import unittest
 
-from src.measurement.intersection_over_union import intersection_over_union
+from lib.src.measurement.intersection_over_union import intersection_over_union
 
 
 class IntervalMock:
+    """
+    Mocks an interval to return predefined values.
+    """
+
     def __init__(self, intersection_result, union_result):
         """
         Interval mock to return predetermined results
@@ -31,20 +35,24 @@ class IntervalMock:
 
 
 class TestIntersectionOverUnion(unittest.TestCase):
-    """
-    Tests the src.model.intersection_over_union function
-    """
     def test_intersection_over_union_normal(self):
+        """
+        Tests the src.model.intersection_over_union function
+        """
         a = IntervalMock(1, 2)
         b = IntervalMock(None, None) # No results necessary
 
         self.assertEqual(0.5, intersection_over_union(a, b))
 
-    """
-    Tests the src.model.intersection_over_union function
-    """
     def test_intersection_over_union_nonsense(self):
+        """
+        Tests the src.model.intersection_over_union function
+        """
         a = IntervalMock(None, None)
         b = IntervalMock(None, None)
 
         self.assertEqual(0, intersection_over_union(a, b))
+
+
+if __name__ == '__main__':
+    unittest.main()

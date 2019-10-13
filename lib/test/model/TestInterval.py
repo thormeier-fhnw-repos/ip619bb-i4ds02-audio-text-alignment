@@ -1,6 +1,5 @@
 import unittest
-
-from src.model.Interval import Interval
+from lib.src.model.Interval import Interval
 
 
 class TestInterval(unittest.TestCase):
