@@ -62,4 +62,4 @@ def bin_print(verbosity: int, required_verbosity: int, *args):
         if required_verbosity == 3:
             prefix = "  [TRACE] "
 
-        print(prefix, *args)
+        print(prefix, *args, flush=True)

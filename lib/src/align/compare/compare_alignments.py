@@ -6,11 +6,14 @@ from lib.src.measurement.intersection_over_union import intersection_over_union
 import numpy as np
 
 
-def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str) -> None:
+def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, with_list: bool) -> None:
     """
     Compares all found alignments
     :param input_path: Input path
     :param verbosity: Verbosity level
+    :param type1: First type for comparison
+    :param type2: Second type for comparison
+    :param with_list: If a list should be shown
     :return: None
     """
     bin_print(verbosity, 1, "Reading files from", input_path)
@@ -44,3 +47,8 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str) 
     bin_print(verbosity, 0, type1 + " vs. " + type2 + ":")
     bin_print(verbosity, 0, " - Mean IOU:   ", np.mean(ious))
     bin_print(verbosity, 0, " - Median IOU: ", np.median(ious))
+    bin_print(verbosity, 0, " - Number of sentences: ", len(ious))
+
+    if with_list:
+        bin_print(verbosity, 0, "Outputting all values as copy/pastable list:")
+        print("\n".join([str(v) for v in ious]))

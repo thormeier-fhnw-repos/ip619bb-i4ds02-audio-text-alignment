@@ -1,5 +1,4 @@
 import unittest
-
 from lib.src.measurement.intersection_over_union import intersection_over_union
 
 
