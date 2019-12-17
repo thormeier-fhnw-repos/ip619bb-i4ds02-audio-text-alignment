@@ -8,6 +8,15 @@ class TestNeedlemanWunsch(unittest.TestCase):
     Tests the implementation of the Needleman-Wunsch algorithm
     """
 
+    def compare(self, a, b):
+        """
+        Basic compare function.
+        :param a: Element of sequence A
+        :param b: Element of sequence B
+        :return: True if match
+        """
+        return a == b
+
     def assert_result(self, a: List, b: List, expected: Tuple[List, List, int]) -> None:
         """
         Convenience method
@@ -16,7 +25,7 @@ class TestNeedlemanWunsch(unittest.TestCase):
         :param expected:
         :return: Tuple
         """
-        self.assertEqual(expected, needleman_wunsch(a, b, 5, -15, -10))
+        self.assertEqual(expected, needleman_wunsch(a, b, 5, -15, -10, self.compare))
 
     def test_same(self) -> None:
         """

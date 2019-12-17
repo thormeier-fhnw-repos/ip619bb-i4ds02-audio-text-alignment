@@ -31,3 +31,10 @@ class Interval:
         end = self.end if self.end >= other.end else other.end
 
         return end - start
+
+    def get_length(self) -> float:
+        """
+        Calculates the length of a this interval
+        :return:
+        """
+        return self.end - self.start

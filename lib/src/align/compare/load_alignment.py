@@ -9,7 +9,7 @@ def load_alignment(path: str) -> List[Sentence]:
     :return: list[Sentence]
     """
     sentences = []
-    with open(path) as f:
+    with open(path, "r+", encoding="utf-8") as f:
         sentences = f.readlines()
 
     return [sentence_from_string(s) for s in sentences if len(s) > 0]

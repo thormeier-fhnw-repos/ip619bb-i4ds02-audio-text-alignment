@@ -8,6 +8,15 @@ class TestSmithWaterman(unittest.TestCase):
     Test the Smith-Waterman implementation.
     """
 
+    def compare(self, a, b):
+        """
+        Basic compare function.
+        :param a: Element of sequence A
+        :param b: Element of sequence B
+        :return: True if match
+        """
+        return a == b
+
     def assert_result(self, a: List, b: List, expected: List[Tuple[List, List, int]]) -> None:
         """
         Convenience method
@@ -16,7 +25,7 @@ class TestSmithWaterman(unittest.TestCase):
         :param expected:
         :return: Tuple
         """
-        self.assertEqual(expected, smith_waterman(a, b, 2, -1, -1))
+        self.assertEqual(expected, smith_waterman(a, b, 2, -1, -1, self.compare))
 
     def test_align(self):
         """

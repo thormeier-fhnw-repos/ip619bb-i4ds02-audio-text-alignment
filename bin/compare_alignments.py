@@ -9,13 +9,15 @@ import time
 
 def main(argv: list) -> None:
     input_args = intro("Compare alignments",
-                       "Compares basic, hand and auto alignments.\n\ncompare_alignment.py --path=<path> --type1=basic,hand,random --type2=basic,hand,random [-v|-vv|-vvv] [--with-list]",
-                       ["path=", "type1=", "type2=", "with-list"], argv)
+                       "Compares basic, hand and auto alignments.\n\ncompare_alignment.py --path=<path> --type1=basic,hand,random --type2=basic,hand,random [-v|-vv|-vvv] [--with-list] [--get-low-means]",
+                       ["path=", "type1=", "type2=", "with-list", "get-low-means", "test-only"], argv)
 
     input_args["with-list"] = True if "with-list" in input_args else False
+    input_args["get-low-means"] = True if "get-low-means" in input_args else False
+    input_args["test-only"] = True if "test-only" in input_args else False
 
     start = time.time()
-    compare_alignments(input_args["path"], input_args["verbosity"], input_args["type1"], input_args["type2"], input_args["with-list"])
+    compare_alignments(input_args["path"], input_args["verbosity"], input_args["type1"], input_args["type2"], input_args["with-list"], input_args["get-low-means"], input_args["test-only"])
     end = time.time()
 
     bin_print(input_args["verbosity"], 0, "Done.")

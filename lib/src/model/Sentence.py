@@ -17,9 +17,9 @@ class Sentence:
         :return: str
         """
         return "\t".join([
-            "%.15f" % self.interval.start,
-            "%.15f" % self.interval.end,
-            self.sentence
+            "%.15f" % (self.interval.start if self.interval.start is not None else 0.0),
+            "%.15f" % (self.interval.end if self.interval.end is not None else 0.0),
+            str(self.sentence)
         ])
 
     def merge_with(self, other: 'Sentence') -> 'Sentence':

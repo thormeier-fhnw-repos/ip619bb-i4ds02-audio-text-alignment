@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, Callable
 import numpy as np
 
 
-def create_score_matrix(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int, allow_negative: bool = True, zero_borders: bool = False) -> np.ndarray:
+def create_score_matrix(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int, compare_function: Callable, allow_negative: bool = True, zero_borders: bool = False) -> np.ndarray:
     """
     Creates a score matrix, fit for all kinds of
     :param a: Sequence A, horizontal in score matrix, i.e. cols
@@ -10,6 +10,7 @@ def create_score_matrix(a: List, b: List, match_reward: int, mismatch_penalty: i
     :param match_reward: Reward to give in case of match
     :param mismatch_penalty: Penalty to give in case of mismatch
     :param gap_penalty: Penalty to give in case of gap introduction
+    :param compare_function: Function to compare two elements of sequences
     :param allow_negative: If negative values are allowed. If not, a 0 is used instead.
     :param zero_borders: If the borders should be left at 0. Needed for semi-global and local alignment.
     :return: Score matrix
@@ -35,13 +36,13 @@ def create_score_matrix(a: List, b: List, match_reward: int, mismatch_penalty: i
         :param b: Sequence element from B
         :return:
         """
-        return mismatch_penalty if a[col - 1] != b[row - 1] else match_reward
+        return match_reward if compare_function(a, b) else mismatch_penalty
 
     for row in range(1, rows):
         for col in range(1, cols):
             up = score_matrix[row - 1, col] + gap_penalty
             left = score_matrix[row, col - 1] + gap_penalty
-            diag = score_matrix[row - 1, col - 1] + get_diag_score(a, b)
+            diag = score_matrix[row - 1, col - 1] + get_diag_score(a[col - 1], b[row - 1])
 
             if allow_negative:
                 score_matrix[row, col] = max(up, left, diag)

@@ -17,7 +17,9 @@ def intro(command_title: str, help_text: str, args: list, argv: list):
 
     try:
         opts, args = getopt.getopt(argv, "h:v", args)
-    except getopt.GetoptError:
+    except getopt.GetoptError as error:
+        print(error)
+        print("")
         print(help_text)
         print("")
         sys.exit(2)
