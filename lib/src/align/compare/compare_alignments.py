@@ -30,6 +30,10 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
 
     ious = []
     low_ious = []
+    sentences_not_appearing_true_positives = 0
+    sentences_not_appearing_false_positives = 0
+    sentences_not_appearing_true_negatives = 0
+    sentences_not_appearing_false_negatives = 0
 
     bin_print(verbosity, 2, "Processing all " + type1 + " alignments...")
     for type1_alignment in type1_alignments:
@@ -37,10 +41,30 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
         bin_print(verbosity, 3, "Processing", file_name)
         type1_aligned_sentences = load_alignment(type1_alignment)
         type2_aligned_sentences = load_alignment(type1_alignment.replace("audacity_" + type1, "audacity_" + type2))
+
+        sentence_pairs = list(zip(type1_aligned_sentences, type2_aligned_sentences))
+
         current_ious = [
-            (intersection_over_union(pair[0].interval, pair[1].interval), pair[0].interval.get_length(), pair[1].interval.get_length(), pair[0].sentence, file_name) for pair in list(zip(type1_aligned_sentences, type2_aligned_sentences))
-            if (not test_only or pair[0].sentence.startswith('[TEST]')) and (pair[0].interval.get_length() > 0.0001 and pair[1].interval.get_length() > 0.0001)
+            (intersection_over_union(pair[0].interval, pair[1].interval), pair[0].interval.get_length(), pair[1].interval.get_length(), pair[0].sentence, file_name) for pair in sentence_pairs
+            if (not test_only or pair[0].sentence.startswith('[TEST]')) and (pair[0].interval.get_length() > 0.001 and pair[1].interval.get_length() > 0.001)
         ]
+
+        # Find sentences that are marked on either side as not appearing at all.
+        pairs_sentence_not_appearing = [
+            pair for pair in sentence_pairs if pair[0].interval.get_length() <= 0.0001 or pair[1].interval.get_length()
+        ]
+
+        # Count those sentences: which of those don't appear in both oder in either one?
+        for pair in pairs_sentence_not_appearing:
+            if pair[0].interval.get_length() <= 0.001 and pair[1].interval.get_length() <= 0.001:
+                sentences_not_appearing_true_positives += 1
+            if pair[0].interval.get_length() <= 0.001 and pair[1].interval.get_length() > 0.001:
+                sentences_not_appearing_false_negatives += 1
+            if pair[0].interval.get_length() > 0.001 and pair[1].interval.get_length() <= 0.001:
+                sentences_not_appearing_false_positives += 1
+
+        # All sentences appearing in both are considered true negatives
+        sentences_not_appearing_true_negatives += len(current_ious)
 
         if len(current_ious) == 0:
             bin_print(verbosity, 2, "No sentences found, skipping...")
@@ -59,12 +83,26 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
 
         ious += current_ious
 
+    precision = sentences_not_appearing_true_positives / (sentences_not_appearing_true_positives + sentences_not_appearing_false_positives)
+    recall = sentences_not_appearing_true_positives / (sentences_not_appearing_true_positives + sentences_not_appearing_false_negatives)
+
     bin_print(verbosity, 3, "All IOUs:", ious)
-    bin_print(verbosity, 0, "--------")
+    bin_print(verbosity, 0, "========")
     bin_print(verbosity, 0, type1 + " vs. " + type2 + ":")
+    bin_print(verbosity, 0, "--------")
+    bin_print(verbosity, 0, "IOU")
     bin_print(verbosity, 0, " - Mean IOU:   ", np.mean([v[0] for v in ious]))
     bin_print(verbosity, 0, " - Median IOU: ", np.median([v[0] for v in ious]))
     bin_print(verbosity, 0, " - Number of sentences: ", len(ious))
+
+    bin_print(verbosity, 0, "--------")
+    bin_print(verbosity, 0, "Sentences not appearing")
+    bin_print(verbosity, 0, " - true negatives:  ", sentences_not_appearing_true_negatives)
+    bin_print(verbosity, 0, " - false negatives: ", sentences_not_appearing_false_negatives)
+    bin_print(verbosity, 0, " - true positives:  ", sentences_not_appearing_true_positives)
+    bin_print(verbosity, 0, " - false positives: ", sentences_not_appearing_false_positives)
+    bin_print(verbosity, 0, "Precision: ", precision)
+    bin_print(verbosity, 0, "Recall: ", recall)
 
     if with_list:
         bin_print(verbosity, 0, "Outputting all values as copy/pastable list:")
