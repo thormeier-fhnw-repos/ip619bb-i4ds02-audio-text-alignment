@@ -29,6 +29,7 @@ def create_google_alignment_semiglobal_character(google_output: object, transcri
     match_reward = 5
     mismatch_penalty = -1
     gap_penalty = -1
+    epsilon = 0.0001
 
     # Some pre-processing: Create sentence objects of transcript, so we can align those later on.
     transcript = transcript.replace('\n', ' ')
@@ -90,15 +91,19 @@ def create_google_alignment_semiglobal_character(google_output: object, transcri
         except AttributeError:
             # _Shouldn't_ happen, as the regexp is basically part of the transcript we're
             # looking at. Character's don't vanish from the transcript, so there's always a match.
-            sentence.interval.start = 0.0
-            sentence.interval.end = 0.0001
+            sentence.interval.start = last_end_time
+            sentence.interval.end = last_end_time + epsilon
+
+            last_end_time = last_end_time + epsilon
             continue
 
         # Mostly none values on either side indicates a false positive, move to beginning of sentence with
         if is_mostly_none(google_alignment[alignment_start_point:alignment_end_point]) \
                 or is_mostly_none(transcript_alignment[alignment_start_point:alignment_end_point]):
-            sentence.interval.start = 0.0
-            sentence.interval.end = 0.0001
+            sentence.interval.start = last_end_time
+            sentence.interval.end = last_end_time + epsilon
+
+            last_end_time = last_end_time + epsilon
             continue
 
         google_sub_start = len([c for c in google_alignment[0:alignment_start_point] if c is not '-' and c is not ' '])
