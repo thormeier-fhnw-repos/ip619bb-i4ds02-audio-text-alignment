@@ -56,11 +56,11 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
 
         # Count those sentences: which of those don't appear in both oder in either one?
         for pair in pairs_sentence_not_appearing:
-            if pair[0].interval.get_length() <= 0.001 and pair[1].interval.get_length() <= 0.001:
+            if pair[0].interval.get_length() <= 0.0001 and pair[1].interval.get_length() <= 0.0001:
                 sentences_not_appearing_true_positives += 1
-            if pair[0].interval.get_length() <= 0.001 and pair[1].interval.get_length() > 0.001:
+            elif pair[0].interval.get_length() <= 0.0001 and pair[1].interval.get_length() > 0.0001:
                 sentences_not_appearing_false_negatives += 1
-            if pair[0].interval.get_length() > 0.001 and pair[1].interval.get_length() <= 0.001:
+            elif pair[0].interval.get_length() > 0.0001 and pair[1].interval.get_length() <= 0.0001:
                 sentences_not_appearing_false_positives += 1
 
         # All sentences appearing in both are considered true negatives
