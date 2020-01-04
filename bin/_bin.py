@@ -1,5 +1,7 @@
 import getopt
 import sys
+import yaml
+from typing import Dict, Any
 
 
 def intro(command_title: str, help_text: str, args: list, argv: list):
@@ -37,11 +39,11 @@ def intro(command_title: str, help_text: str, args: list, argv: list):
     input_args["verbosity"] = verbosity
 
     for opt, arg in opts:
-        if opt == '-h':
+        if opt == "-h":
             print(help_text)
             print("")
             sys.exit()
-        if opt != '-v':
+        if opt != "-v":
             input_args[opt.replace("--", "")] = arg
 
     bin_print(verbosity, 3, "Input args:", input_args)
@@ -65,3 +67,13 @@ def bin_print(verbosity: int, required_verbosity: int, *args):
             prefix = "  [TRACE] "
 
         print(prefix, *args, flush=True)
+
+
+def load_config(path: str) -> Dict[str, Any]:
+    """
+    Loads the bin configuration from yaml file
+    :param path: Path to config file
+    :return: Dict[str, int, int, int, float] The configuration
+    """
+    with open(path) as file:
+        return yaml.load(file, Loader=yaml.FullLoader)

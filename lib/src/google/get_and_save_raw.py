@@ -2,7 +2,7 @@ from bin._bin import bin_print
 from os import listdir
 from os.path import isfile, join
 from google.cloud import speech
-from lib.src.align.google.get_raw import get_raw
+from lib.src.google.get_raw import get_raw
 from google.api_core.future.polling import _OperationNotComplete
 
 

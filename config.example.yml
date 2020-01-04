@@ -1,0 +1,10 @@
+aligner_type: basic
+
+algorithm:
+  match_reward: 5
+  mismatch_penalty: -1
+  gap_penalty: -1
+
+no_appearance:
+  type: character
+  interval_length: 0.0001

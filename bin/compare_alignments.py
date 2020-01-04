@@ -8,9 +8,25 @@ import time
 
 
 def main(argv: list) -> None:
-    input_args = intro("Compare alignments",
-                       "Compares basic, hand and auto alignments.\n\ncompare_alignment.py --path=<path> --type1=basic,hand,random --type2=basic,hand,random [-v|-vv|-vvv] [--with-list] [--get-low-means] [--training-only]",
-                       ["path=", "type1=", "type2=", "with-list", "get-low-means", "training-only"], argv)
+    title = "Compare alignments"
+    description = """
+Compares two kinds of alignments
+
+Usage:
+    python compare_alignment.py --path=<path> --type1=basic,hand,random,google --type2=basic,hand,random,google [-v|-vv|-vvv] [--with-list] [--get-low-means] [--training-only]
+
+Args:
+    --path:          Path to read alignment data
+    --type1:         First type to compare, one of basic, hand, random or google
+    --type2:         Second type to compare, one of basic, hand, random or google
+    -v|-vv|-vvv:     Verbosity level of the output
+    --with-list:     Include a list with all calculated IOUs for copy/paste (to use in an EXCEL sheet, for example)
+    --get-low-means: Includes a list of wav files with a mean IOU < 0.3, for debugging purposes
+    --training-only: Only ever compares sentences marked with [TRAINING] in the first type of the alignment
+    -h:              Prints this help
+    """
+    args = ["path=", "type1=", "type2=", "with-list", "get-low-means", "training-only"]
+    input_args = intro(title, description, args, argv)
 
     input_args["with-list"] = True if "with-list" in input_args else False
     input_args["get-low-means"] = True if "get-low-means" in input_args else False

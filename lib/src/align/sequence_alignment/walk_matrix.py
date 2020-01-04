@@ -2,7 +2,9 @@ from typing import List, Tuple, Callable
 import numpy as np
 
 
-def walk_matrix(score_matrix: np.ndarray, start_col: int, start_row: int, a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int, compare_function: Callable, allow_negative: bool = True) -> Tuple[List, List, int]:
+def walk_matrix(score_matrix: np.ndarray, start_col: int, start_row: int, a: List, b: List, match_reward: int,
+                mismatch_penalty: int, gap_penalty: int, compare_function: Callable, allow_negative: bool = True
+                ) -> Tuple[List, List, int]:
     """
     Backtracing for matrices created with create_score_matrix
     :param score_matrix: The score matrix to walk back on

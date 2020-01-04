@@ -4,7 +4,7 @@ from lib.src.model.Interval import Interval
 from typing import List
 
 
-def transcricpt_to_sentences(transcript: str) -> List[Sentence]:
+def transcript_to_sentences(transcript: str) -> List[Sentence]:
     """
     Creates a list of Sentence instances with empty intervals from a given text.
     :param transcript: String

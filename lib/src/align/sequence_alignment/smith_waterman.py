@@ -4,7 +4,8 @@ from lib.src.align.sequence_alignment.walk_matrix import walk_matrix
 import numpy as np
 
 
-def smith_waterman(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int, compare_function: Callable) -> Tuple[List, List, int]:
+def smith_waterman(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int,
+                   compare_function: Callable) -> Tuple[List, List, int]:
     """
     Smith-Waterman algorithm for local sequence alignment
     :param a: Sequence A, horizontal in score matrix, i.e. cols

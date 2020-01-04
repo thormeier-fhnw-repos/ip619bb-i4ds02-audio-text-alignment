@@ -4,6 +4,7 @@ from os.path import isfile, join
 from lib.src.align.compare.load_alignment import load_alignment
 from lib.src.measurement.intersection_over_union import intersection_over_union
 import numpy as np
+from prettytable import PrettyTable
 
 
 def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, with_list: bool, get_low_means: bool, training_only: bool) -> None:
@@ -59,8 +60,6 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
             pair for pair in sentence_pairs if (pair[0].interval.get_length() <= epsilon or pair[1].interval.get_length() <= epsilon)
         ]
 
-        #print(len(pairs_sentence_not_appearing))
-
         # Count those sentences: which of those don't appear in both oder in either one?
         for pair in pairs_sentence_not_appearing:
             if pair[0].interval.get_length() <= epsilon and pair[1].interval.get_length() <= epsilon:
@@ -105,11 +104,15 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
     bin_print(verbosity, 0, " - Number of sentences appearing: ", len(ious))
 
     bin_print(verbosity, 0, "--------")
+
+    t = PrettyTable()
+    t.field_names = ["", "Condition positive", "Condition negative"]
+    t.add_row(["Predicted positive", sentences_appearing_true_positives, sentences_appearing_false_positives])
+    t.add_row(["Predicted negative", sentences_appearing_false_negatives, sentences_appearing_true_negatives])
+
+
     bin_print(verbosity, 0, "Sentences appearing")
-    bin_print(verbosity, 0, " - true negatives:  ", sentences_appearing_true_negatives)
-    bin_print(verbosity, 0, " - false negatives: ", sentences_appearing_false_negatives)
-    bin_print(verbosity, 0, " - true positives:  ", sentences_appearing_true_positives)
-    bin_print(verbosity, 0, " - false positives: ", sentences_appearing_false_positives)
+    bin_print(verbosity, 0, "\n" + str(t))
     bin_print(verbosity, 0, "Precision: ", precision)
     bin_print(verbosity, 0, "Recall:    ", recall)
     bin_print(verbosity, 0, "F1 score:  ", f1_score)

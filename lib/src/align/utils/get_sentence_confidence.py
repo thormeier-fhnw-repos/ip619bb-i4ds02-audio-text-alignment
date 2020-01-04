@@ -27,12 +27,10 @@ def get_sentence_confidence(transcript_sentence: str, google_sentence_confidence
         else:
             no_mismatches += 1
 
-    print(no_gaps_transcript, no_gaps_google, no_mismatches, no_matches)
-
     # Calculate the score for this sentence according to Needleman-Wunsch
     sentence_score = (no_gaps_google * gap_penalty) + (no_gaps_transcript * gap_penalty) + (no_mismatches * mismatch_penalty) + (no_matches * match_reward)
 
-    print(sentence_score, (no_gaps_google * gap_penalty), (no_gaps_transcript * gap_penalty), (no_mismatches * mismatch_penalty), (no_matches * match_reward))
+    # print(sentence_score, (no_gaps_google * gap_penalty), (no_gaps_transcript * gap_penalty), (no_mismatches * mismatch_penalty), (no_matches * match_reward))
 
     # Calculate a possible maximum score according to Needleman-Wunsch (i.e. every char is a match)
     max_sentence_score = len(transcript_sentence) * match_reward

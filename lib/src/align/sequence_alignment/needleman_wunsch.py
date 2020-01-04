@@ -3,8 +3,8 @@ from lib.src.align.sequence_alignment.create_score_matrix import create_score_ma
 from lib.src.align.sequence_alignment.walk_matrix import walk_matrix
 
 
-def needleman_wunsch(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int, compare_function: Callable) -> Tuple[
-    List, List, int]:
+def needleman_wunsch(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int,
+                     compare_function: Callable) -> Tuple[List, List, int]:
     """
     Needleman-Wunsch implementation for global sequence alignment
     :param a: Sequence A, horizontal in score matrix, i.e. cols

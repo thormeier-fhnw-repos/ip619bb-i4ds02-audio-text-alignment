@@ -2,9 +2,11 @@ from typing import List, Callable
 import numpy as np
 
 
-def create_score_matrix(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int, compare_function: Callable, allow_negative: bool = True, zero_borders: bool = False) -> np.ndarray:
+def create_score_matrix(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int,
+                        compare_function: Callable, allow_negative: bool = True, zero_borders: bool = False
+                        ) -> np.ndarray:
     """
-    Creates a score matrix, fit for all kinds of
+    Creates a score matrix, fit for all kinds of alignments
     :param a: Sequence A, horizontal in score matrix, i.e. cols
     :param b: Sequence B, vertical in score matrix, i.e. rows
     :param match_reward: Reward to give in case of match
