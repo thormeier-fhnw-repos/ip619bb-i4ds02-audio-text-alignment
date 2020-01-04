@@ -3,11 +3,13 @@ from os import listdir
 from os.path import isfile, join
 from lib.src.align.compare.load_alignment import load_alignment
 from lib.src.measurement.intersection_over_union import intersection_over_union
+from lib.src.model.Sentence import Sentence
 import numpy as np
 from prettytable import PrettyTable
 
 
-def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, with_list: bool, get_low_means: bool, training_only: bool) -> None:
+def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, with_list: bool, get_low_means: bool,
+                       training_only: bool) -> None:
     """
     Compares all found alignments
     :param input_path: Input path
@@ -24,7 +26,8 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
     bin_print(verbosity, 1, "Reading files from", input_path)
 
     bin_print(verbosity, 2, "Trying to find all .txt files...")
-    txt_files = [input_path + f for f in listdir(input_path) if isfile(join(input_path, f)) and f.split('.')[1] == "txt"]
+    txt_files = [input_path + f for f in listdir(input_path) if
+                 isfile(join(input_path, f)) and f.split('.')[1] == "txt"]
     bin_print(verbosity, 3, "Found txt files:", txt_files)
 
     bin_print(verbosity, 2, "Filtering found files by ones containing alignment by " + type1 + "...")
@@ -46,27 +49,30 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
         type1_aligned_sentences = load_alignment(type1_alignment)
         type2_aligned_sentences = load_alignment(type1_alignment.replace("audacity_" + type1, "audacity_" + type2))
 
-        sentence_pairs = [pair for pair in list(zip(type1_aligned_sentences, type2_aligned_sentences)) if (not training_only or pair[0].sentence.startswith('[TRAINING]'))]
+        sentence_pairs = [pair for pair in list(zip(type1_aligned_sentences, type2_aligned_sentences)) if
+                          (not training_only or pair[0].sentence.startswith('[TRAINING]'))]
 
         total_sentences += len(sentence_pairs)
 
         current_ious = [
-            (intersection_over_union(pair[0].interval, pair[1].interval), pair[0].interval.get_length(), pair[1].interval.get_length(), pair[0].sentence, file_name) for pair in sentence_pairs
+            (intersection_over_union(pair[0].interval, pair[1].interval), pair[0].interval.get_length(),
+             pair[1].interval.get_length(), pair[0].sentence, file_name) for pair in sentence_pairs
             if (pair[0].interval.get_length() > epsilon and pair[1].interval.get_length() > epsilon)
         ]
 
         # Find sentences that are marked on either side as not appearing at all.
         pairs_sentence_not_appearing = [
-            pair for pair in sentence_pairs if (pair[0].interval.get_length() <= epsilon or pair[1].interval.get_length() <= epsilon)
+            pair for pair in sentence_pairs if
+            (pair[0].interval.get_length() <= epsilon or pair[1].interval.get_length() <= epsilon)
         ]
 
         # Count those sentences: which of those don't appear in both oder in either one?
         for pair in pairs_sentence_not_appearing:
-            if pair[0].interval.get_length() <= epsilon and pair[1].interval.get_length() <= epsilon:
+            if not does_sentence_appear(pair[0], epsilon) and not does_sentence_appear(pair[1], epsilon):
                 sentences_appearing_true_negatives += 1
-            elif pair[0].interval.get_length() <= epsilon and pair[1].interval.get_length() > epsilon:
+            elif not does_sentence_appear(pair[0], epsilon) and does_sentence_appear(pair[1], epsilon):
                 sentences_appearing_false_positives += 1
-            elif pair[0].interval.get_length() > epsilon and pair[1].interval.get_length() <= epsilon:
+            elif does_sentence_appear(pair[0], epsilon) and not does_sentence_appear(pair[1], epsilon):
                 sentences_appearing_false_negatives += 1
 
         # All sentences appearing in both are considered true negatives
@@ -89,8 +95,10 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
 
         ious += current_ious
 
-    precision = sentences_appearing_true_positives / (sentences_appearing_true_positives + sentences_appearing_false_positives)
-    recall = sentences_appearing_true_positives / (sentences_appearing_true_positives + sentences_appearing_false_negatives)
+    precision = sentences_appearing_true_positives / (
+                sentences_appearing_true_positives + sentences_appearing_false_positives)
+    recall = sentences_appearing_true_positives / (
+                sentences_appearing_true_positives + sentences_appearing_false_negatives)
     f1_score = 2 * ((precision * recall) / (precision + recall))
 
     bin_print(verbosity, 3, "All IOUs:", ious)
@@ -110,7 +118,6 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
     t.add_row(["Predicted positive", sentences_appearing_true_positives, sentences_appearing_false_positives])
     t.add_row(["Predicted negative", sentences_appearing_false_negatives, sentences_appearing_true_negatives])
 
-
     bin_print(verbosity, 0, "Sentences appearing")
     bin_print(verbosity, 0, "\n" + str(t))
     bin_print(verbosity, 0, "Precision: ", precision)
@@ -128,3 +135,16 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
     if get_low_means:
         bin_print(verbosity, 0, "Outputting copy/pastable list of low (<0.3) mean IOU files:")
         print(low_ious)
+
+
+def does_sentence_appear(sentence: Sentence, epsilon: float) -> bool:
+    """
+    Checks if a sentence is marked as appearing
+    :param sentence: The sentence under check
+    :param epsilon:  Interval length epsilon to check
+    :return: True if sentence exists, else false
+    """
+    if isinstance(sentence.interval.start, float) and isinstance(sentence.interval.end, float):
+        return sentence.interval.get_length() > epsilon
+
+    return sentence.interval.start != "-" and sentence.interval.end != "-"

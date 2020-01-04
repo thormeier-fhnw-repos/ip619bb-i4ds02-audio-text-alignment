@@ -113,3 +113,25 @@ Args:
     -v|-vv|-vvv: Verbosity level of the output
     -h:          Prints this help
 ```
+
+```
+Fix hand alignments
+----------
+
+
+Fix hand alignments: Reshuffle training data and/or assign `-` to nonexisting sentences.
+
+Usage:
+    python fix_hand_alignments.py --path=<path> [-v|-vv|-vvv] [--fix-nonexisting] [--reshuffle-training]
+
+Args:
+    --path:               Path to read alignment data
+    -v|-vv|-vvv:          Verbosity level of the output
+    --fix-nonexisting:    If non-existing sentences should be marked with `-` for interval start and end points
+    --reshuffle-training: Select a new 70% of all sentences as training data
+    -h:                   Prints this help
+```
+
+## License
+
+MIT, see LICENSE.md

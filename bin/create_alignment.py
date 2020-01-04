@@ -6,7 +6,6 @@ sys.path.append('.')
 from bin._bin import intro, bin_print, load_config
 import time
 from lib.src.align.aligner.get_aligner import get_aligner
-from string import punctuation
 
 
 def main(argv: list) -> None:
