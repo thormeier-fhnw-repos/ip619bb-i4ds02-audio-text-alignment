@@ -17,7 +17,7 @@ class TestSmithWaterman(unittest.TestCase):
         """
         return a == b
 
-    def assert_result(self, a: List, b: List, expected: List[Tuple[List, List, int]]) -> None:
+    def assert_result(self, a: List, b: List, expected: Tuple[List, List, int]) -> None:
         """
         Convenience method
         :param a: List of elements to align a
@@ -35,10 +35,7 @@ class TestSmithWaterman(unittest.TestCase):
         self.assert_result(
             ['C', 'T', 'C', 'A', 'T', 'G', 'C'],
             ['A', 'C', 'A', 'A', 'T', 'C', 'G'],
-            [
-                (['C', None, 'A', 'T', None, 'G'], ['C', 'A', 'A', 'T', 'C', 'G'], 6.0),
-                (['C', None, 'A', 'T', 'G', 'C'], ['C', 'A', 'A', 'T', None, 'C'], 6.0)
-            ]
+            (['C', None, 'A', 'T', 'G', 'C'], ['C', 'A', 'A', 'T', None, 'C'], 6.0)
         )
 
     def test_perfect_align(self):
@@ -49,7 +46,7 @@ class TestSmithWaterman(unittest.TestCase):
         self.assert_result(
             ['F', 'O', 'O', 'B', 'A', 'R'],
             ['F', 'O', 'O', 'B', 'A', 'R'],
-            [(['F', 'O', 'O', 'B', 'A', 'R'], ['F', 'O', 'O', 'B', 'A', 'R'], 12.0)]
+            (['F', 'O', 'O', 'B', 'A', 'R'], ['F', 'O', 'O', 'B', 'A', 'R'], 12.0)
         )
 
     def test_empty_alignment(self):
@@ -60,20 +57,5 @@ class TestSmithWaterman(unittest.TestCase):
         self.assert_result(
             ['F', 'O', 'O'],
             ['B', 'A', 'R'],
-            [([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0),
-             ([], [], 0.0)]
+            ([], [], 0.0)
         )

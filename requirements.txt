@@ -5,3 +5,4 @@ nltk==3.4.5
 Bio==0.1.0
 PyYAML==5.2
 google==2.0.3
+unittest_data_provider==1.0.1

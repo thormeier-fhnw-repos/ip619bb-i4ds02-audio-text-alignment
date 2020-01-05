@@ -71,4 +71,4 @@ class Interval:
         if isinstance(self.end, float):
             end = "%.15f" % (self.end if self.end is not None else 0.0)
 
-        return start + "\t" + end
+        return str(start) + "\t" + str(end)

@@ -24,12 +24,12 @@ class Sentence:
         :param other:
         :return:
         """
-        if self.interval.start < other.interval.start or not isinstance(self.interval.start, float):
-            sentence = self.sentence.strip() + other.sentence.strip()
+        if not (isinstance(self.interval.start, float) and isinstance(other.interval.start, float)) or self.interval.start < other.interval.start:
+            sentence = str(self.sentence).strip() + " " + str(other.sentence).strip()
             start_time = self.interval.start
             end_time = other.interval.end
         else:
-            sentence = other.sentence.strip() + self.sentence.strip()
+            sentence = str(other.sentence).strip() + " " + str(self.sentence).strip()
             start_time = other.interval.start
             end_time = self.interval.end
 

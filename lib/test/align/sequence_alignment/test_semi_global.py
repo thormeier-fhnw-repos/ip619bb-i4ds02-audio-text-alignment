@@ -17,7 +17,7 @@ class TestSmithWaterman(unittest.TestCase):
         """
         return a == b
 
-    def assert_result(self, a: List, b: List, expected: List[Tuple[List, List, int]]) -> None:
+    def assert_result(self, a: List, b: List, expected: Tuple[List, List, int]) -> None:
         """
         Convenience method
         :param a: List of elements to align a

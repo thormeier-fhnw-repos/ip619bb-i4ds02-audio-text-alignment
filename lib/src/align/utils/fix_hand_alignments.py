@@ -25,7 +25,7 @@ def fix_hand_alignments(input_path: str, fix_nonexisting: bool, reshuffle_traini
     alignments = [f for f in txt_files if "audacity_hand" in f]
     bin_print(verbosity, 3, "Found txt files containing alingment by hand:", alignments)
 
-    # Create random array of 1 and 0 to determine which sentences are part of test set.
+    # Create random array of 1 and 0 to determine which sentences are part of test_ooooold set.
     total_no_sentences = 1480
     testset_size = int(np.ceil(0.70 * total_no_sentences))
     positives = np.ones((testset_size,), dtype=int)
@@ -50,7 +50,7 @@ def fix_hand_alignments(input_path: str, fix_nonexisting: bool, reshuffle_traini
                     sentence.interval.end = "-"
 
             if reshuffle_training:
-                # Mark all as not test by default.
+                # Mark all as not test_ooooold by default.
                 sentence.sentence = sentence.sentence.replace("[TRAINING]", "")
 
                 if testset_pattern[i] == 1:

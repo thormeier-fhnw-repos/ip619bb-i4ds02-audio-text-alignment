@@ -1,51 +1,84 @@
 import unittest
+from unittest_data_provider import data_provider
+from typing import Any
+from lib.src.model.Interval import Interval
 from lib.src.model.Sentence import Sentence, sentence_from_string
 
 
-class IntervalMock:
+class IntervalMock(Interval):
     """
     Mocks an Interval
     """
 
     def __init__(self, start, end):
+        super().__init__(start, end)
         self.start = start
         self.end = end
+
+    def to_formatted(self):
+        """
+        To formatted mock
+        :return:
+        """
+        return "mocked_interval"
 
 
 class TestSentence(unittest.TestCase):
     """
-    Tests src.model.Sentence
+    Test class lib.src.model.Sentence
     """
 
-    def test_get_audacity_label_format(self):
-        interval = IntervalMock(12.0, 13.5)
-        text = "Lorem Ipsum"
-        sentence = Sentence(text, interval)
+    audacity_label_format_data_provider = lambda: (
+        ("Lorem ipsum dolor", IntervalMock(0.0, 0.0), "mocked_interval\tLorem ipsum dolor"),  # Sanity check
+        (None, IntervalMock(0.0, 0.0), "mocked_interval\tNone"),  # Sentence is None
+        ("", IntervalMock(0.0, 0.0), "mocked_interval\t"),  # Empty sentence
+    )
 
-        self.assertEqual("12.000000000000000\t13.500000000000000\tLorem Ipsum", sentence.to_audacity_label_format())
+    @data_provider(audacity_label_format_data_provider)
+    def test_to_audacity_label_format(self, sentence: Any, interval: IntervalMock, expected_format: str) -> None:
+        """
+        Tests to_audacity_label_format method's behaviour
+        :param sentence:        Inner sentence
+        :param interval:        Mocked interval
+        :param expected_format: Expected audacity label format
+        :return: None
+        """
+        s = Sentence(sentence, interval)
+        self.assertEqual(s.to_audacity_label_format(), expected_format)
 
-    def test_sentence_from_string(self):
-        string = "12.123\t13.445\tFoobar"
-        sentence = sentence_from_string(string)
+    merge_sentence_data_provider = lambda: (
+        ("foo", IntervalMock(0.0, 0.1), "bar", IntervalMock(0.1, 0.2), Sentence("foo bar", Interval(0.0, 0.2))),  # Sanity check
+        ("foo", IntervalMock(0.1, 0.2), "bar", IntervalMock(0.0, 0.1), Sentence("bar foo", Interval(0.0, 0.2))),  # Flipped intervals
+        ("   foo   ", IntervalMock(0.0, 0.1), "   bar   ", IntervalMock(0.1, 0.2), Sentence("foo bar", Interval(0.0, 0.2))),  # Additional spaces around sentences
+        (None, IntervalMock(0.0, 0.1), "bar", IntervalMock(0.1, 0.2), Sentence("None bar", Interval(0.0, 0.2))),  # One sentence is None
+        ("foo", IntervalMock(0.0, 0.1), None, IntervalMock(0.1, 0.2), Sentence("foo None", Interval(0.0, 0.2))),  # Other sentence is None
+        (None, IntervalMock(0.0, 0.1), None, IntervalMock(0.1, 0.2), Sentence("None None", Interval(0.0, 0.2))),  # Both sentences are none
+    )
 
-        self.assertEqual("Foobar", sentence.sentence)
-        self.assertEqual(12.123, sentence.interval.start)
-        self.assertEqual(13.445, sentence.interval.end)
+    @data_provider(merge_sentence_data_provider)
+    def test_merge_with(self, sentence: str, interval: IntervalMock, other_sentence: str, other_interval: IntervalMock,
+                        expected_sentence: Sentence) -> None:
+        a = Sentence(sentence, interval)
+        b = Sentence(other_sentence, other_interval)
+        self.assertEqual(a.merge_with(b).to_audacity_label_format(), expected_sentence.to_audacity_label_format())
+        pass
 
-    def test_merge(self):
-        sentence1 = Sentence("Lorem ", IntervalMock(0.0, 0.1))
-        sentence2 = Sentence(" Ipsum", IntervalMock(0.1, 0.2))
-        sentence_merged_1 = sentence1.merge_with(sentence2)
-        sentence_merged_2 = sentence2.merge_with(sentence1)
+    from_string_data_provider = lambda: (
+        ("0.0000\t1.0000\tfoo bar baz", float, 0.0, float, 1.0, "foo bar baz"),  # Sanity check
+        ("-\t0.00\tfoo bar baz", str, "-", float, 0.0, "foo bar baz"),  # One interval part isn't float
+        ("0.00\t-\tfoo bar baz", float, 0.0, str, "-", "foo bar baz"),  # Other interval part isn't float
+        ("-\t-\tfoo bar baz", str, "-", str, "-", "foo bar baz"),  # Both interval parts aren't float
+    )
 
-        self.assertEqual(sentence_merged_1.sentence, sentence_merged_2.sentence)
-        self.assertEqual(sentence_merged_1.interval.start, sentence_merged_2.interval.start)
-        self.assertEqual(sentence_merged_1.interval.end, sentence_merged_2.interval.end)
-
-        self.assertEqual("LoremIpsum", sentence_merged_1.sentence)
-        self.assertEqual(0.0, sentence_merged_1.interval.start)
-        self.assertEqual(0.2, sentence_merged_1.interval.end)
-
+    @data_provider(from_string_data_provider)
+    def test_sentence_from_string(self, input_string: str, expected_start_type: Any, expected_start: Any,
+                                  expected_end_type: Any, expected_end: Any, expected_sentence: str) -> None:
+        s = sentence_from_string(input_string)
+        self.assertIsInstance(s.interval.start, expected_start_type)
+        self.assertEqual(s.interval.start, expected_start)
+        self.assertIsInstance(s.interval.end, expected_end_type)
+        self.assertEqual(s.interval.end, expected_end)
+        self.assertEqual(s.sentence, expected_sentence)
 
 if __name__ == '__main__':
     unittest.main()

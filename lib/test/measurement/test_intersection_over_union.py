@@ -1,56 +1,52 @@
 import unittest
+from typing import Any
+from lib.src.model.Interval import Interval
+from unittest_data_provider import data_provider
 from lib.src.measurement.intersection_over_union import intersection_over_union
 
 
-class IntervalMock:
+class IntervalMock(Interval):
     """
-    Mocks an interval to return predefined values.
+    Mocks the Interval class
     """
 
-    def __init__(self, intersection_result, union_result):
-        """
-        Interval mock to return predetermined results
-        :param intersection_result: Float
-        :param union_result: Float
-        """
-        self.intersection_result = intersection_result
-        self.union_result = union_result
+    def __init__(self, intersection_value: Any, union_value: Any):
+        super().__init__(0.0, 0.1)
+        self.intersection_value = intersection_value
+        self.union_value = union_value
 
-    def get_union(self, ignored):
+    def get_intersection(self, other: Interval) -> float:
         """
-        Union mock
-        :param ignored: Any
-        :return: Predetermined value
+        Mocks get_intersection
+        :param other: Other interval, ignored
+        :return: Predefined value
         """
-        return self.union_result
+        return self.intersection_value
 
-    def get_intersection(self, ignored):
+    def get_union(self, other: Interval):
         """
-        Intersection mock
-        :param ignored: any
-        :return: Predetermined value
+        Mocks get_union
+        :param other: Other interval, ignored
+        :return: Predefined value
         """
-        return self.intersection_result
+        return self.union_value
 
 
 class TestIntersectionOverUnion(unittest.TestCase):
-    def test_intersection_over_union_normal(self):
-        """
-        Tests the src.model.intersection_over_union function
-        """
-        a = IntervalMock(1, 2)
-        b = IntervalMock(None, None) # No results necessary
+    """
+    Tests lib.src.measurement.intersection_over_union
+    """
 
-        self.assertEqual(0.5, intersection_over_union(a, b))
+    intersection_over_union_data_provider = lambda: (
+        (IntervalMock(1.0, 1.0), Interval(0.0, 0.0), 1.0),  # Sanity check
+        (IntervalMock(3.0, 6.0), Interval(0.0, 0.0), 0.5),  # Sanity check
+        (IntervalMock(1.0, 0.0), Interval(0.0, 0.0), 0.0),  # Shouldn't do a division by 0
+        (IntervalMock(0.0, 1.0), Interval(0.0, 0.0), 0.0),  # One 0 should yield value 0
+    )
 
-    def test_intersection_over_union_nonsense(self):
-        """
-        Tests the src.model.intersection_over_union function
-        """
-        a = IntervalMock(None, None)
-        b = IntervalMock(None, None)
-
-        self.assertEqual(0, intersection_over_union(a, b))
+    @data_provider(intersection_over_union_data_provider)
+    def test_intersection_over_union(self, a: IntervalMock, b: IntervalMock, expected_value: float):
+        self.assertEqual(intersection_over_union(a, b), expected_value)
 
 
 if __name__ == '__main__':
