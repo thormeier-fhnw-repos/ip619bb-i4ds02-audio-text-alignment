@@ -2,7 +2,7 @@
 import sys
 
 sys.path.append('.')
-from bin._bin import intro, bin_print
+from bin._bin import intro, bin_print, load_config
 from lib.src.align.compare.compare_alignments import compare_alignments
 import time
 from prettytable import PrettyTable
@@ -14,27 +14,30 @@ def main(argv: list) -> None:
 Compares two kinds of alignments
 
 Usage:
-    python compare_alignment.py --path=<path> --type1=basic,hand,random,google --type2=basic,hand,random,google [-v|-vv|-vvv] [--with-list] [--get-low-means] [--training-only]
+    python compare_alignment.py --path=<path> --type1=basic,hand,random,google --type2=basic,hand,random,google --config=<path> [-v|-vv|-vvv] [--with-list] [--get-low-means] [--training-only]
 
 Args:
     --path:          Path to read alignment data
     --type1:         First type to compare, one of basic, hand, random or google
     --type2:         Second type to compare, one of basic, hand, random or google
+    --config         Path to config file
     -v|-vv|-vvv:     Verbosity level of the output
     --with-list:     Include a list with all calculated IOUs for copy/paste (to use in an EXCEL sheet, for example)
     --get-low-means: Includes a list of wav files with a mean IOU < 0.3, for debugging purposes
     --training-only: Only ever compares sentences marked with [TRAINING] in the first type of the alignment
     -h:              Prints this help
     """
-    args = ["path=", "type1=", "type2=", "with-list", "get-low-means", "training-only"]
+    args = ["path=", "type1=", "type2=", "config=",  "with-list", "get-low-means", "training-only"]
     input_args = intro(title, description, args, argv)
+
+    config = load_config(input_args["config"])
 
     input_args["with-list"] = True if "with-list" in input_args else False
     input_args["get-low-means"] = True if "get-low-means" in input_args else False
     input_args["training-only"] = True if "training-only" in input_args else False
 
     start = time.time()
-    results = compare_alignments(input_args["path"], input_args["verbosity"], input_args["type1"], input_args["type2"], input_args["training-only"])
+    results = compare_alignments(input_args["path"], input_args["verbosity"], input_args["type1"], input_args["type2"], input_args["training-only"], config)
 
     verbosity = input_args["verbosity"]
 
