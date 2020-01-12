@@ -80,7 +80,14 @@ class TestInterval(unittest.TestCase):
     )
 
     @data_provider(length_data_provider)
-    def test_get_length(self, start: Any, end: Any, expected_length: float):
+    def test_get_length(self, start: Any, end: Any, expected_length: float) -> None:
+        """
+        Tests get_length method's behaviour
+        :param start:           Start of the interval
+        :param end:             End of the interval
+        :param expected_length: Expected calculated length
+        :return: None
+        """
         a = Interval(start, end)
         self.assertEqual(a.get_length(), expected_length)
 
@@ -98,7 +105,14 @@ class TestInterval(unittest.TestCase):
     )
 
     @data_provider(formatted_data_provider)
-    def test_to_formatted(self, start: Any, end: Any, expected_formatted: str):
+    def test_to_formatted(self, start: Any, end: Any, expected_formatted: str) -> None:
+        """
+        Tests to_formatted method's behaviour.
+        :param start:              Start of the interval
+        :param end:                End of the interval
+        :param expected_formatted: Expected formatted output
+        :return: None
+        """
         a = Interval(start, end)
         self.assertEqual(a.to_formatted(), expected_formatted)
 

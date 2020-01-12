@@ -18,7 +18,7 @@ class IntervalMock(Interval):
     def to_formatted(self):
         """
         To formatted mock
-        :return:
+        :return: Some hardcoded string to test against
         """
         return "mocked_interval"
 
@@ -58,6 +58,15 @@ class TestSentence(unittest.TestCase):
     @data_provider(merge_sentence_data_provider)
     def test_merge_with(self, sentence: str, interval: IntervalMock, other_sentence: str, other_interval: IntervalMock,
                         expected_sentence: Sentence) -> None:
+        """
+        Tests the merge_with method's behaviour
+        :param sentence:          First sentence as string
+        :param interval:          First interval
+        :param other_sentence:    Other sentence as string
+        :param other_interval:    Other interval
+        :param expected_sentence: Expected merged sentence
+        :return: None
+        """
         a = Sentence(sentence, interval)
         b = Sentence(other_sentence, other_interval)
         self.assertEqual(a.merge_with(b).to_audacity_label_format(), expected_sentence.to_audacity_label_format())
@@ -73,6 +82,16 @@ class TestSentence(unittest.TestCase):
     @data_provider(from_string_data_provider)
     def test_sentence_from_string(self, input_string: str, expected_start_type: Any, expected_start: Any,
                                   expected_end_type: Any, expected_end: Any, expected_sentence: str) -> None:
+        """
+        Tests sntence_from_string function's behaviour.
+        :param input_string:        Formatted string to parse
+        :param expected_start_type: Type of the inner Interval's start property
+        :param expected_start:      Value of the inner Interval's start property
+        :param expected_end_type:   Type of the inner Interval's end property
+        :param expected_end:        Value of the inner Interval's end property
+        :param expected_sentence:   Expected inner sentence as string
+        :return: None
+        """
         s = sentence_from_string(input_string)
         self.assertIsInstance(s.interval.start, expected_start_type)
         self.assertEqual(s.interval.start, expected_start)

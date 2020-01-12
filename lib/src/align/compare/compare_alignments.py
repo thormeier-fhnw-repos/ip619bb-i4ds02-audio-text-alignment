@@ -5,28 +5,31 @@ from lib.src.align.compare.load_alignment import load_alignment
 from lib.src.measurement.intersection_over_union import intersection_over_union
 from lib.src.model.Sentence import Sentence
 import numpy as np
-from prettytable import PrettyTable
+from typing import Dict, Any
+import os
 
 
-def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, with_list: bool, get_low_means: bool,
-                       training_only: bool) -> None:
+def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, training_only: bool, config: Dict[str, Any]) -> Dict[str, Any]:
     """
     Compares all found alignments
-    :param input_path: Input path
-    :param verbosity: Verbosity level
-    :param type1: First type for comparison
-    :param type2: Second type for comparison
-    :param with_list: If a list should be shown
-    :param get_low_means: If only the low ones should be shown (0-0.05)
+    :param input_path:    Input path
+    :param verbosity:     Verbosity level
+    :param type1:         First type for comparison
+    :param type2:         Second type for comparison
     :param training_only: Determines if a sentence has to be prefixed with [TEST] in order to be considered.
-    :return: None
+    :param config:        Configuration dict, see README
+    :return: Dict of all results
     """
-    epsilon = 0.0001
+
+    if input_path.endswith(os.sep):
+        input_path = input_path[:-1]
+
+    epsilon = config["no_appearance"]["interval_length"]
 
     bin_print(verbosity, 1, "Reading files from", input_path)
 
     bin_print(verbosity, 2, "Trying to find all .txt files...")
-    txt_files = [input_path + f for f in listdir(input_path) if
+    txt_files = [input_path + os.sep + f for f in listdir(input_path) if
                  isfile(join(input_path, f)) and f.split('.')[1] == "txt"]
     bin_print(verbosity, 3, "Found txt files:", txt_files)
 
@@ -42,12 +45,18 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
     sentences_appearing_true_negatives = 0
     sentences_appearing_false_negatives = 0
 
+    ious_per_file = {}
+
     bin_print(verbosity, 2, "Processing all " + type1 + " alignments...")
     for type1_alignment in type1_alignments:
         file_name = type1_alignment.replace("audacity_" + type1, "").replace(input_path, "").replace("_.txt", "")
         bin_print(verbosity, 3, "Processing", file_name)
         type1_aligned_sentences = load_alignment(type1_alignment)
-        type2_aligned_sentences = load_alignment(type1_alignment.replace("audacity_" + type1, "audacity_" + type2))
+        try:
+            type2_aligned_sentences = load_alignment(type1_alignment.replace("audacity_" + type1, "audacity_" + type2))
+        except FileNotFoundError:
+            # Corresponding file doesn't exist, skip it completely
+            continue
 
         sentence_pairs = [pair for pair in list(zip(type1_aligned_sentences, type2_aligned_sentences)) if
                           (not training_only or pair[0].sentence.startswith('[TRAINING]'))]
@@ -82,59 +91,64 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
             bin_print(verbosity, 2, "No sentences found, skipping...")
             continue
 
-        mean_iou = np.mean([v[0] for v in current_ious])
-        median_iou = np.median([v[0] for v in current_ious])
+        if len(current_ious) > 0:
+            mean_iou = np.mean([v[0] for v in current_ious])
+            median_iou = np.median([v[0] for v in current_ious])
+        else:
+            mean_iou = np.nan
+            median_iou = np.nan
 
-        bin_print(verbosity, 3, "IOUs for", file_name, ":", current_ious)
-        bin_print(verbosity, 0, file_name, ", " + type1 + " vs. " + type2 + ":")
-        bin_print(verbosity, 0, " - Mean IOU:   ", mean_iou)
-        bin_print(verbosity, 0, " - Median IOU: ", median_iou)
+
+        ious_per_file[file_name] = {
+            "mean": mean_iou,
+            "median": median_iou,
+            "all": current_ious
+        }
 
         if mean_iou <= 0.3:
             low_ious.append(file_name + ".wav")
 
         ious += current_ious
 
-    precision = sentences_appearing_true_positives / (
-                sentences_appearing_true_positives + sentences_appearing_false_positives)
-    recall = sentences_appearing_true_positives / (
-                sentences_appearing_true_positives + sentences_appearing_false_negatives)
-    f1_score = 2 * ((precision * recall) / (precision + recall))
+    try:
+        precision = sentences_appearing_true_positives / (
+                    sentences_appearing_true_positives + sentences_appearing_false_positives)
+    except ZeroDivisionError:
+        precision = 0.0
 
-    bin_print(verbosity, 3, "All IOUs:", ious)
-    bin_print(verbosity, 0, "========")
-    bin_print(verbosity, 0, type1 + " vs. " + type2 + ":")
-    bin_print(verbosity, 0, "Total number of sentences:", total_sentences)
-    bin_print(verbosity, 0, "--------")
-    bin_print(verbosity, 0, "IOU")
-    bin_print(verbosity, 0, " - Mean IOU:   ", np.mean([v[0] for v in ious]))
-    bin_print(verbosity, 0, " - Median IOU: ", np.median([v[0] for v in ious]))
-    bin_print(verbosity, 0, " - Number of sentences appearing: ", len(ious))
+    try:
+        recall = sentences_appearing_true_positives / (
+                    sentences_appearing_true_positives + sentences_appearing_false_negatives)
+    except ZeroDivisionError:
+        recall = 0.0
 
-    bin_print(verbosity, 0, "--------")
+    try:
+        f1_score = 2 * ((precision * recall) / (precision + recall))
+    except ZeroDivisionError:
+        f1_score = 0.0
 
-    t = PrettyTable()
-    t.field_names = ["", "Condition positive", "Condition negative"]
-    t.add_row(["Predicted positive", sentences_appearing_true_positives, sentences_appearing_false_positives])
-    t.add_row(["Predicted negative", sentences_appearing_false_negatives, sentences_appearing_true_negatives])
-
-    bin_print(verbosity, 0, "Sentences appearing")
-    bin_print(verbosity, 0, "\n" + str(t))
-    bin_print(verbosity, 0, "Precision: ", precision)
-    bin_print(verbosity, 0, "Recall:    ", recall)
-    bin_print(verbosity, 0, "F1 score:  ", f1_score)
-
-    if with_list:
-        bin_print(verbosity, 0, "Outputting all values as copy/pastable list:")
-        print("\n".join([str(v[0]) for v in [v for v in ious] if v[0] <= 1.0]))
-
-        for v in ious:
-            if v[0] <= 0.1:
-                print(v[4])
-
-    if get_low_means:
-        bin_print(verbosity, 0, "Outputting copy/pastable list of low (<0.3) mean IOU files:")
-        print(low_ious)
+    return {
+        "no_sentences": {
+            "appearing": len(ious),
+            "total": total_sentences,
+        },
+        "ious": {
+            "all": ious,
+            "low": low_ious,
+            "mean": np.mean([v[0] for v in ious]) if len(ious) > 0 else np.nan,
+            "median": np.median([v[0] for v in ious]) if len(ious) > 0 else np.nan,
+            "per_file": ious_per_file
+        },
+        "appearance": {
+            "true_positives": sentences_appearing_true_positives,
+            "false_positives": sentences_appearing_false_positives,
+            "true_negatives": sentences_appearing_true_negatives,
+            "false_negatives": sentences_appearing_false_negatives,
+            "precision": precision,
+            "recall": recall,
+            "f1_score": f1_score,
+        }
+    }
 
 
 def does_sentence_appear(sentence: Sentence, epsilon: float) -> bool:

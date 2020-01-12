@@ -54,4 +54,4 @@ def sentence_from_string(string: str) -> Sentence:
     except ValueError:
         interval_end = parts[1]
 
-    return Sentence(parts[2], Interval(interval_start, interval_end))
+    return Sentence(parts[2].strip(), Interval(interval_start, interval_end))

@@ -45,7 +45,14 @@ class TestIntersectionOverUnion(unittest.TestCase):
     )
 
     @data_provider(intersection_over_union_data_provider)
-    def test_intersection_over_union(self, a: IntervalMock, b: IntervalMock, expected_value: float):
+    def test_intersection_over_union(self, a: IntervalMock, b: IntervalMock, expected_value: float) -> None:
+        """
+        Tests intersection_over_union function.
+        :param a:
+        :param b:
+        :param expected_value:
+        :return:
+        """
         self.assertEqual(intersection_over_union(a, b), expected_value)
 
 

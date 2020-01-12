@@ -38,7 +38,7 @@ class TestNeedlemanWunsch(unittest.TestCase):
         Convenience method
         :param a:        List of elements to align a
         :param b:        List of elements to align b
-        :param expected: Expected output
-        :return: Tuple
+        :param expected: Expected Alignment
+        :return: None
         """
         self.assertEqual(expected, needleman_wunsch(a, b, 5, -15, -10, self.compare))

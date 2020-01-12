@@ -8,7 +8,7 @@ class TestSmithWaterman(unittest.TestCase):
     Test the Semi-Global alignment implementation.
     """
 
-    def compare(self, a, b):
+    def compare(self, a, b) -> bool:
         """
         Basic compare function.
         :param a: Element of sequence A
@@ -20,17 +20,17 @@ class TestSmithWaterman(unittest.TestCase):
     def assert_result(self, a: List, b: List, expected: Tuple[List, List, int]) -> None:
         """
         Convenience method
-        :param a: List of elements to align a
-        :param b: List of elements to align b
-        :param expected:
-        :return: Tuple
+        :param a:        List of elements to align a
+        :param b:        List of elements to align b
+        :param expected: Expected alignment
+        :return: None
         """
         self.assertEqual(expected, semi_global(a, b, 2, -1, -1, self.compare))
 
-    def test_align(self):
+    def test_align(self) -> None:
         """
         Test alignment of example used in slides about Semi-Global alignment
-        :return:
+        :return: None
         """
         self.assert_result(
             ['A', 'T', 'C', 'C', 'G', 'A', 'A', 'C', 'A', 'T', 'C', 'C', 'A', 'A', 'T', 'C', 'G', 'A', 'A', 'G', 'C'],

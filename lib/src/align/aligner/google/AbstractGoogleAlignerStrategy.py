@@ -65,17 +65,27 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         bin_print(verbosity, 3, prettify_alignment(google_alignment, transcript_alignment))
 
         return cls.align_per_sentence(sentences, transcript_alignment, google_alignment,
-                           google_words, alignment_parameters, verbosity)
+                           google_words, alignment_parameters, alignment_score, verbosity)
 
     @staticmethod
     def get_google_words(google_output: object) -> List[dict]:
         """
         Preprocesses the Google output to further work with it.
         :param google_output: JSON object
-        :return:
+        :return: List of dict for all words in a google_output.
         """
-        return [{'word': preprocess_string(w["word"]), "startTime": w["startTime"], "endTime": w["endTime"]} for w in
-            sum([r.alternatives[0]["words"] for r in google_output.results], [])]
+        words = []
+        for result in google_output.results:
+            alternative = result.alternatives[0]
+            for word in alternative["words"]:
+                words.append({
+                    "word": preprocess_string(word["word"]),
+                    "startTime": word["startTime"],
+                    "endTime": word["endTime"],
+                    "confidence": alternative["confidence"]
+                })
+
+        return words
 
     @staticmethod
     def get_sentences(transcript: str) -> List[Sentence]:
@@ -105,6 +115,8 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         """
         return preprocess_string(transcript)
 
+
+
     @staticmethod
     def mark_sentence_not_appearing(sentence: Sentence, alignment_parameters: Dict[str, Any],
                                     last_end_time: float) -> None:
@@ -125,7 +137,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
 
     @classmethod
     def align_per_sentence(cls, sentences: List[Sentence], transcript_alignment: str, google_alignment: str,
-                           google_words: List[object], alignment_parameters: Dict[str, Any], verbosity: int) -> None:
+                           google_words: List[object], alignment_parameters: Dict[str, Any], alignment_score: int, verbosity: int) -> None:
         """
         Assigns start and end times to sentences based on given alignments.
         :param sentences:            All sentences
@@ -133,6 +145,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         :param google_alignment:     Aligned google output
         :param google_words:         Google words, to get startTime and endTime
         :param alignment_parameters: Dict of parameters loaded from a given YAML file. See README for full config.
+        :param alignment_score:      Score of the alignment
         :param verbosity:            Verbosity of output
         :return: None
         """
@@ -175,8 +188,8 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
             character_count = 0
             found_start = False
 
-            startWord = None
-            endWord = None
+            startWordConfidence = 0.0
+            endWordConfidence = 0.0
 
             for word in google_words:
                 character_count += len(preprocess_string(word["word"]))
@@ -185,18 +198,19 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                 # Guarantee that there's no overlapping sentences
                 if character_count >= google_sub_start and last_end_time <= word_start_time and not found_start:
                     sentence.interval.start = word_start_time
-                    startWord = word["word"]
+                    startWordConfidence = word["confidence"]
                     found_start = True
 
                 if found_start and character_count >= google_sub_end:
                     sentence.interval.end = float(word["endTime"].replace("s", ""))
                     last_end_time = sentence.interval.end
-                    endWord = word["word"]
+                    endWordConfidence = word["confidence"]
                     break
 
             sentence_confidence = get_sentence_confidence(
                 ''.join(sentence_characters),
-                0.0,
+                startWordConfidence,
+                endWordConfidence,
                 transcript_alignment[alignment_start_point:alignment_end_point],
                 google_alignment[alignment_start_point:alignment_end_point],
                 alignment_parameters["algorithm"]["match_reward"],
@@ -204,6 +218,6 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                 alignment_parameters["algorithm"]["gap_penalty"]
             )
 
-            bin_print(verbosity, 2, "Sentence confidence:", str(sentence_confidence * 2))
+            bin_print(verbosity, 2, "Sentence confidence:", str(sentence_confidence))
 
         return sentences
