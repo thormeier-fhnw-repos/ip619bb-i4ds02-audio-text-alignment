@@ -20,8 +20,6 @@ class GoogleSemiglobalCharacterAlignerStrategy(AbstractGoogleAlignerStrategy):
             """
             return a == b
 
-        print(transcript)
-
         alignment = semi_global(
             list(google_output),
             list(transcript),

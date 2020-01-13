@@ -53,7 +53,7 @@ def get_sentence_confidence(transcript_sentence: str, google_start_confidence: f
 
     alignment_confidence = adjusted_score / adjusted_max_score
 
-    print(min_sentence_score, max_sentence_score, sentence_score, ((google_start_confidence + google_end_confidence) / 2))
+    # print(min_sentence_score, max_sentence_score, sentence_score, alignment_confidence * ((google_start_confidence + google_end_confidence) / 2))
 
     overall_confidence = alignment_confidence * ((google_start_confidence + google_end_confidence) / 2)
 

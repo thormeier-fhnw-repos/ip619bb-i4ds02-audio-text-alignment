@@ -1,3 +1,4 @@
+from bin._bin import bin_print
 from lib.src.align.aligner.google.GoogleFilesAligner import GoogleFilesAligner
 from lib.src.align.compare.compare_alignments import compare_alignments
 from typing import Dict, Any, List
@@ -26,6 +27,9 @@ def adjust_parameters(input_path: str, output_path: str, google_files_aligner: G
         google_files_aligner.alignment_parameters["gap_penalty"] = params[2]
         google_files_aligner.align_files(input_path, output_path, 0)
 
+        bin_print(verbosity, 1, "Starting new iteration...")
+        bin_print(verbosity, 2, "Passed parameters:", params)
+
         result = compare_alignments(input_path, 0, "hand", "google", True, alignment_parameters)
 
         return 1 - result["ious"]["mean"] * result["appearance"]["f1_score"]
@@ -33,4 +37,4 @@ def adjust_parameters(input_path: str, output_path: str, google_files_aligner: G
     x0 = np.array([alignment_parameters["algorithm"]["match_reward"], alignment_parameters["algorithm"]["mismatch_penalty"], alignment_parameters["algorithm"]["gap_penalty"]])
     res = minimize(optimize_function, x0, method='nelder-mead', options = {'xatol': 1e-8, 'disp': True})
 
-    print(res)
+    bin_print(verbosity, 0, "Calculated result:", res)
