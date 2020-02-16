@@ -1,8 +1,8 @@
 prettytable==0.7.2
 pydub==0.23.1
-numpy==1.13.1+mkl
+numpy==1.18.1+mkl
 nltk==3.4.5
 Bio==0.1.0
-PyYAML==5.2
+PyYAML==5.3
 google==2.0.3
 unittest_data_provider==1.0.1

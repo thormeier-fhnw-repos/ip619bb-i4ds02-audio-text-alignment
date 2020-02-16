@@ -10,4 +10,4 @@ def transcript_to_sentences(transcript: str) -> List[Sentence]:
     :param transcript: String
     :return: List of Sentence instances
     """
-    return [Sentence(sentence, Interval(None, None)) for sentence in sent_tokenize(transcript, 'german')]
+    return [Sentence(sentence, Interval(None, None), None) for sentence in sent_tokenize(transcript, 'german')]

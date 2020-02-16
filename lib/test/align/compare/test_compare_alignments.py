@@ -37,11 +37,11 @@ def test_compare_alignment_data_provider() -> Tuple:
     Data provider function
     :return: Tuple
     """
-    sentence_1 = Sentence("foo", Interval(0.0, 0.1))
-    sentence_2 = Sentence("bar", Interval(0.0, 0.2))
-    sentence_3 = Sentence("baz", Interval(0.1, 0.2))
-    sentence_4 = Sentence("qux", Interval(0.0, 0.2))
-    sentence_5 = Sentence("lorem", Interval(0.0001, 0.0002)) # Doesn't appear
+    sentence_1 = Sentence("foo", Interval(0.0, 0.1), None)
+    sentence_2 = Sentence("bar", Interval(0.0, 0.2), None)
+    sentence_3 = Sentence("baz", Interval(0.1, 0.2), None)
+    sentence_4 = Sentence("qux", Interval(0.0, 0.2), None)
+    sentence_5 = Sentence("lorem", Interval(0.0001, 0.0002), None) # Doesn't appear
 
     file_1_type1 = AlignmentFile("file_1_audacity_type1.txt", [sentence_1, sentence_2, sentence_5])
     file_2_type1 = AlignmentFile("file_2_audacity_type1.txt", [sentence_1, sentence_2, sentence_5])
@@ -92,8 +92,6 @@ class TestCompareAlignments(unittest.TestCase):
         result = compare_alignments(input_path, 0, "type1", "type2", False, config)
 
         self.assertDictEqual(expected_result, result)
-
-    pass
 
 
 if __name__ == '__main__':

@@ -1,10 +1,20 @@
-aligner_type: basic
+aligner_type: google_semiglobal_character
 
 algorithm:
-  match_reward: 5
-  mismatch_penalty: -1
-  gap_penalty: -1
+  match_reward: 100
+  mismatch_penalty: -31.86148336
+  gap_penalty: 0
 
 no_appearance:
   type: character
   interval_length: 0.0001
+
+score_weights:
+  gaps_google: 77.07762888
+  gaps_transcript: 11.85596545
+  alignment_score: -100
+  google_confidence: 6.1249349
+
+filtering:
+  threshold: -75
+  method: remove

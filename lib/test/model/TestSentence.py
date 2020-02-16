@@ -43,16 +43,16 @@ class TestSentence(unittest.TestCase):
         :param expected_format: Expected audacity label format
         :return: None
         """
-        s = Sentence(sentence, interval)
+        s = Sentence(sentence, interval, None)
         self.assertEqual(s.to_audacity_label_format(), expected_format)
 
     merge_sentence_data_provider = lambda: (
-        ("foo", IntervalMock(0.0, 0.1), "bar", IntervalMock(0.1, 0.2), Sentence("foo bar", Interval(0.0, 0.2))),  # Sanity check
-        ("foo", IntervalMock(0.1, 0.2), "bar", IntervalMock(0.0, 0.1), Sentence("bar foo", Interval(0.0, 0.2))),  # Flipped intervals
-        ("   foo   ", IntervalMock(0.0, 0.1), "   bar   ", IntervalMock(0.1, 0.2), Sentence("foo bar", Interval(0.0, 0.2))),  # Additional spaces around sentences
-        (None, IntervalMock(0.0, 0.1), "bar", IntervalMock(0.1, 0.2), Sentence("None bar", Interval(0.0, 0.2))),  # One sentence is None
-        ("foo", IntervalMock(0.0, 0.1), None, IntervalMock(0.1, 0.2), Sentence("foo None", Interval(0.0, 0.2))),  # Other sentence is None
-        (None, IntervalMock(0.0, 0.1), None, IntervalMock(0.1, 0.2), Sentence("None None", Interval(0.0, 0.2))),  # Both sentences are none
+        ("foo", IntervalMock(0.0, 0.1), "bar", IntervalMock(0.1, 0.2), Sentence("foo bar", Interval(0.0, 0.2), None)),  # Sanity check
+        ("foo", IntervalMock(0.1, 0.2), "bar", IntervalMock(0.0, 0.1), Sentence("bar foo", Interval(0.0, 0.2), None)),  # Flipped intervals
+        ("   foo   ", IntervalMock(0.0, 0.1), "   bar   ", IntervalMock(0.1, 0.2), Sentence("foo bar", Interval(0.0, 0.2), None)),  # Additional spaces around sentences
+        (None, IntervalMock(0.0, 0.1), "bar", IntervalMock(0.1, 0.2), Sentence("None bar", Interval(0.0, 0.2), None)),  # One sentence is None
+        ("foo", IntervalMock(0.0, 0.1), None, IntervalMock(0.1, 0.2), Sentence("foo None", Interval(0.0, 0.2), None)),  # Other sentence is None
+        (None, IntervalMock(0.0, 0.1), None, IntervalMock(0.1, 0.2), Sentence("None None", Interval(0.0, 0.2), None)),  # Both sentences are none
     )
 
     @data_provider(merge_sentence_data_provider)
@@ -67,8 +67,8 @@ class TestSentence(unittest.TestCase):
         :param expected_sentence: Expected merged sentence
         :return: None
         """
-        a = Sentence(sentence, interval)
-        b = Sentence(other_sentence, other_interval)
+        a = Sentence(sentence, interval, None)
+        b = Sentence(other_sentence, other_interval, None)
         self.assertEqual(a.merge_with(b).to_audacity_label_format(), expected_sentence.to_audacity_label_format())
         pass
 

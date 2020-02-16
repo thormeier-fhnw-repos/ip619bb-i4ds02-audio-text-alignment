@@ -57,6 +57,14 @@ class Interval:
 
         return 0.0
 
+    def get_deviation(self, other: 'Interval'):
+        """
+        Calculates the deviation of this interval with some other interval
+        :param other: The other interval
+        :return: Amount of seconds of deviation
+        """
+        return abs(self.start - other.start) + abs(self.end - other.end)
+
     def to_formatted(self) -> str:
         """
         Formats this interval to later fit into audacity label format

@@ -6,6 +6,8 @@ from bin._bin import intro, bin_print, load_config
 from lib.src.align.compare.compare_alignments import compare_alignments
 import time
 from prettytable import PrettyTable
+from lib.src.measurement.pearsonr_lists import pearsonr_lists
+import numpy as np
 
 
 def main(argv: list) -> None:
@@ -55,17 +57,24 @@ Args:
     bin_print(verbosity, 0, "IOU")
     bin_print(verbosity, 0, " - Mean IOU:   ", results["ious"]["mean"])
     bin_print(verbosity, 0, " - Median IOU: ", results["ious"]["median"])
-    bin_print(verbosity, 0, " - Number of sentences appearing: ", results["no_sentences"]["appearing"])
-
     bin_print(verbosity, 0, "--------")
+    bin_print(verbosity, 0, "Deviation (absolute)")
+    bin_print(verbosity, 0, " - Mean deviation:   ", results["scores"]["deviation"]["mean"])
+    bin_print(verbosity, 0, " - Median deviation: ", results["scores"]["deviation"]["median"])
+    bin_print(verbosity, 0, "--------")
+    bin_print(verbosity, 0, "Calculated score")
+    bin_print(verbosity, 0, " - Mean calculated score:   ", np.mean(results["scores"]["calculated"]["all"]))
+    bin_print(verbosity, 0, " - Median calculated score: ", np.median(results["scores"]["calculated"]["all"]))
+    bin_print(verbosity, 0, "--------")
+    bin_print(verbosity, 0, "Number of sentences appearing: ", results["no_sentences"]["appearing"])
 
-    t = PrettyTable()
-    t.field_names = ["", "Condition positive", "Condition negative"]
-    t.add_row(["Predicted positive", results["appearance"]["true_positives"], results["appearance"]["false_positives"]])
-    t.add_row(["Predicted negative", results["appearance"]["false_negatives"], results["appearance"]["true_negatives"]])
+    tPrecisionRecall = PrettyTable()
+    tPrecisionRecall.field_names = ["", "Condition positive", "Condition negative"]
+    tPrecisionRecall.add_row(["Predicted positive", results["appearance"]["true_positives"], results["appearance"]["false_positives"]])
+    tPrecisionRecall.add_row(["Predicted negative", results["appearance"]["false_negatives"], results["appearance"]["true_negatives"]])
 
     bin_print(verbosity, 0, "Sentences appearing")
-    bin_print(verbosity, 0, "\n" + str(t))
+    bin_print(verbosity, 0, "\n" + str(tPrecisionRecall))
     bin_print(verbosity, 0, "Precision: ", results["appearance"]["precision"])
     bin_print(verbosity, 0, "Recall:    ", results["appearance"]["recall"])
     bin_print(verbosity, 0, "F1 score:  ", results["appearance"]["f1_score"])
@@ -77,6 +86,101 @@ Args:
     if input_args["get-low-means"]:
         bin_print(verbosity, 0, "Outputting copy/pastable list of low (<0.3) mean IOU files:")
         print(results["ious"]["low"])
+
+
+    tPearson = PrettyTable()
+    tPearson.field_names = ["", "IOU", "Deviation", "Alignment score", "Google confidence", "Calculated confidence", "Google gaps percentage", "Transcript gaps percentage", "Calculated score"]
+    tPearson.add_row([
+        "IOU",
+        pearsonr_lists(results["ious"]["all_only"], results["ious"]["all_only"]),
+        pearsonr_lists(results["ious"]["all_only"], results["scores"]["deviation"]["all"]),
+        pearsonr_lists(results["ious"]["all_only"], results["scores"]["alignment_scores"]["all"]),
+        pearsonr_lists(results["ious"]["all_only"], results["scores"]["google_confidence"]["all"]),
+        pearsonr_lists(results["ious"]["all_only"], results["scores"]["calculated"]["all"]),
+        pearsonr_lists(results["ious"]["all_only"], results["scores"]["google_gaps"]["all"]),
+        pearsonr_lists(results["ious"]["all_only"], results["scores"]["transcript_gaps"]["all"]),
+        pearsonr_lists(results["ious"]["all_only"], results["scores"]["calculated"]["all"])
+    ])
+    tPearson.add_row([
+        "Deviation",
+        pearsonr_lists(results["scores"]["deviation"]["all"], results["ious"]["all_only"]),
+        pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["deviation"]["all"]),
+        pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["alignment_scores"]["all"]),
+        pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["google_confidence"]["all"]),
+        pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["calculated"]["all"]),
+        pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["google_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["transcript_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["calculated"]["all"])
+    ])
+    tPearson.add_row([
+        "Alignment score",
+        pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["ious"]["all_only"]),
+        pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["deviation"]["all"]),
+        pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["alignment_scores"]["all"]),
+        pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["google_confidence"]["all"]),
+        pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["calculated"]["all"]),
+        pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["google_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["transcript_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["calculated"]["all"])
+    ])
+    tPearson.add_row([
+        "Google confidence",
+        pearsonr_lists(results["scores"]["google_confidence"]["all"], results["ious"]["all_only"]),
+        pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["deviation"]["all"]),
+        pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["alignment_scores"]["all"]),
+        pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["google_confidence"]["all"]),
+        pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["calculated"]["all"]),
+        pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["google_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["transcript_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["calculated"]["all"])
+    ])
+    tPearson.add_row([
+        "Calculated confidence",
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["ious"]["all_only"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["deviation"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["alignment_scores"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["google_confidence"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["calculated"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["google_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["transcript_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["calculated"]["all"])
+    ])
+    tPearson.add_row([
+        "Google gaps percentage",
+        pearsonr_lists(results["scores"]["google_gaps"]["all"], results["ious"]["all_only"]),
+        pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["deviation"]["all"]),
+        pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["alignment_scores"]["all"]),
+        pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["google_confidence"]["all"]),
+        pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["calculated"]["all"]),
+        pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["google_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["transcript_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["calculated"]["all"])
+    ])
+    tPearson.add_row([
+        "Transcript gaps percentage",
+        pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["ious"]["all_only"]),
+        pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["deviation"]["all"]),
+        pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["alignment_scores"]["all"]),
+        pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["google_confidence"]["all"]),
+        pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["calculated"]["all"]),
+        pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["google_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["transcript_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["calculated"]["all"])
+    ])
+    tPearson.add_row([
+        "Calculated score",
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["ious"]["all_only"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["deviation"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["alignment_scores"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["google_confidence"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["calculated"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["google_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["transcript_gaps"]["all"]),
+        pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["calculated"]["all"])
+    ])
+
+    bin_print(verbosity, 0, "Score correlations")
+    bin_print(verbosity, 0, "\n" + str(tPearson))
 
     end = time.time()
 

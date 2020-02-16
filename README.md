@@ -51,11 +51,22 @@ algorithm:
 no_appearance:
   type: [ character | time ]
   interval_length: float
+
+score_weights:
+  gaps_google: float
+  gaps_transcript: float
+  alignment_score: float
+  google_confidence: float
+
+filtering:
+  threshold: float
+  method: [ mark | delete ]
+
 ```
 
 ## CLI commands
 
-The following CLI commands are available and should be executed as `python path/to/script.py`:
+The following CLI commands are available and should be executed as `python ./bin/{scriptName}` from project root:
 
 ```
 Create alignment
@@ -130,6 +141,44 @@ Args:
     --fix-nonexisting:    If non-existing sentences should be marked with `-` for interval start and end points
     --reshuffle-training: Select a new 70% of all sentences as training data
     -h:                   Prints this help
+```
+
+```
+Optimize alignments
+----------
+
+
+Tries to find the best alignment parameters based on Bayesian optimization.
+
+Usage:
+    python optimize_parameters.py --path=<path> --config=<path> [-v|-vv|-vvv]
+
+Args:
+    --path:                  Path to read alignment data from
+    --config:                Path to configuration
+    --convergence-plot-file: Filename for the plot of the convergence
+    --acquisition-plot-file: Filename for the plot of the acquisition (if possible to create)
+    -v|-vv|-vvv:             Verbosity level of the output
+    -h:                      Prints this help
+```
+
+```
+Optimize score
+----------
+
+
+Tries to find the best parameters for overall score based on Bayesian optimization.
+
+Usage:
+    python optimize_score.py --path=<path> --config=<path> [-v|-vv|-vvv]
+
+Args:
+    --path:                  Path to read alignment data from
+    --config:                Path to configuration
+    --convergence-plot-file: Filename for the plot of the convergence
+    --acquisition-plot-file: Filename for the plot of the acquisition (if possible to create)
+    -v|-vv|-vvv:             Verbosity level of the output
+    -h:                      Prints this help
 ```
 
 ## License

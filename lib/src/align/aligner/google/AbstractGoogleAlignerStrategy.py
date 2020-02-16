@@ -9,8 +9,10 @@ from lib.src.align.utils.transcript_to_sentences import transcript_to_sentences
 from lib.src.align.utils.prettify_alignment import prettify_alignment
 from lib.src.align.utils.get_sentence_confidence import get_sentence_confidence
 from lib.src.align.utils.is_mostly_none import is_mostly_none
-from nltk import word_tokenize
+from lib.src.align.utils.get_none_part import get_none_part
+from lib.src.align.utils.calculate_overall_score import calculate_overall_score
 import re
+from lib.src.model.AdditionalData import AdditionalData
 
 
 class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
@@ -152,6 +154,8 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         last_end_point = 0
         last_end_time = 0.0
 
+        sentence_index = 0
+
         for sentence in sentences:
             sentence_characters = list(preprocess_string(sentence.sentence))
 
@@ -175,8 +179,8 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                 continue
 
             # Mostly none values on either side indicates a false positive, move to beginning of sentence with
-            if is_mostly_none(google_alignment[alignment_start_point:alignment_end_point]) \
-                    or is_mostly_none(transcript_alignment[alignment_start_point:alignment_end_point]):
+            if is_mostly_none(list(google_alignment[alignment_start_point:alignment_end_point])) \
+                    or is_mostly_none(list(transcript_alignment[alignment_start_point:alignment_end_point])):
                 cls.mark_sentence_not_appearing(sentence, alignment_parameters, last_end_time)
                 last_end_time = last_end_time + alignment_parameters["no_appearance"]["interval_length"]
                 continue
@@ -188,8 +192,8 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
             character_count = 0
             found_start = False
 
-            startWordConfidence = 0.0
-            endWordConfidence = 0.0
+            start_word_confidence = 0.0
+            end_word_confidence = 0.0
 
             for word in google_words:
                 character_count += len(preprocess_string(word["word"]))
@@ -198,25 +202,58 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                 # Guarantee that there's no overlapping sentences
                 if character_count >= google_sub_start and last_end_time <= word_start_time and not found_start:
                     sentence.interval.start = word_start_time
-                    startWordConfidence = word["confidence"]
+                    start_word_confidence = word["confidence"]
                     found_start = True
 
                 if found_start and character_count >= google_sub_end:
                     sentence.interval.end = float(word["endTime"].replace("s", ""))
                     last_end_time = sentence.interval.end
-                    endWordConfidence = word["confidence"]
+                    end_word_confidence = word["confidence"]
                     break
 
             sentence_confidence = get_sentence_confidence(
-                ''.join(sentence_characters),
-                startWordConfidence,
-                endWordConfidence,
+                start_word_confidence,
+                end_word_confidence,
                 transcript_alignment[alignment_start_point:alignment_end_point],
                 google_alignment[alignment_start_point:alignment_end_point],
                 alignment_parameters["algorithm"]["match_reward"],
                 alignment_parameters["algorithm"]["mismatch_penalty"],
                 alignment_parameters["algorithm"]["gap_penalty"]
             )
+
+            google_gaps_percentage = get_none_part(
+                list(google_alignment[alignment_start_point:alignment_end_point])
+            )
+            transcript_gaps_percentage = get_none_part(
+                list(transcript_alignment[alignment_start_point:alignment_end_point])
+            )
+
+            sentence.additional_data = AdditionalData(
+                sentence_confidence["average_google_confidence"],
+                sentence_confidence["normalized_sentence_score"],
+                google_gaps_percentage,
+                transcript_gaps_percentage
+            )
+
+            overall_score = calculate_overall_score(
+                google_gaps_percentage,
+                transcript_gaps_percentage,
+                sentence_confidence["average_google_confidence"],
+                sentence_confidence["normalized_sentence_score"],
+                alignment_parameters["score_weights"]["gaps_google"],
+                alignment_parameters["score_weights"]["gaps_transcript"],
+                alignment_parameters["score_weights"]["alignment_score"],
+                alignment_parameters["score_weights"]["google_confidence"]
+            )
+
+            if overall_score > alignment_parameters["filtering"]["threshold"]:
+                if alignment_parameters["filtering"]["method"] == "mark":
+                    sentence.sentence = "[BAD]" + sentence.sentence
+                    sentence_index += 1
+                else:
+                    del(sentences[sentence_index])
+            else:
+                sentence_index += 1
 
             bin_print(verbosity, 2, "Sentence confidence:", str(sentence_confidence))
 

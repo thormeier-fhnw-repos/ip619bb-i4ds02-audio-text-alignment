@@ -1,24 +1,28 @@
-def get_sentence_confidence(transcript_sentence: str, google_start_confidence: float, google_end_confidence: float, transcript_alignment_sentence: str, transcript_google_sentence: str, match_reward: int, mismatch_penalty: int, gap_penalty: int) -> float:
+from typing import Dict, Any
+
+
+def get_sentence_confidence(google_start_confidence: float, google_end_confidence: float,
+                            alignment_transcript_sentence: str, alignment_google_sentence: str, match_reward: int,
+                            mismatch_penalty: int, gap_penalty: int) -> Dict[str, float]:
     """
     Calculates an overall confidence for a given sentence
-    :param transcript_sentence: Sentence as coming from the transcript
-    :param google_start_confidence: Google's confidence for the first word
-    :param google_end_confidence:   Google's confidence with the last word
-    :param alignment_sentence:      Alignment of this sentence
-    :param google_sentence:
-    :param match_reward:
-    :param mismatch_penalty:
-    :param gap_penalty:
-    :return: Calculated confidence
+    :param google_start_confidence:       Calculated confidence at the start of the sentence
+    :param google_end_confidence:         Calculated confidence at the end of the sentence
+    :param alignment_transcript_sentence: Aligned version of the transcript sentence
+    :param alignment_google_sentence:     Aligned version of the google sentence
+    :param match_reward:                  Match reward used to calculate the alignment score
+    :param mismatch_penalty:              Mismatch penalty used to calculate the alignment score
+    :param gap_penalty:                   Gap penalty used to calculate the alignment score
+    :return: Dict of various scorings
     """
 
     # Count all gaps: they contribute to overall score
-    no_gaps_transcript = transcript_alignment_sentence.count('-')
-    no_gaps_google = transcript_google_sentence.count('-')
+    no_gaps_transcript = alignment_transcript_sentence.count('-')
+    no_gaps_google = alignment_google_sentence.count('-')
 
     # Remove all gap characters
-    transcript_alignment_sentence_gapless = transcript_alignment_sentence.replace('-', '')
-    transcript_google_sentence_gapless = transcript_google_sentence.replace('-', '')
+    transcript_alignment_sentence_gapless = alignment_transcript_sentence.replace('-', '')
+    transcript_google_sentence_gapless = alignment_google_sentence.replace('-', '')
 
     no_matches = 0
     no_mismatches = 0
@@ -29,7 +33,8 @@ def get_sentence_confidence(transcript_sentence: str, google_start_confidence: f
             no_mismatches += 1
 
     # Calculate the score for this sentence according to Needleman-Wunsch
-    sentence_score = (no_gaps_google * gap_penalty) + (no_gaps_transcript * gap_penalty) + (no_mismatches * mismatch_penalty) + (no_matches * match_reward)
+    sentence_score = (no_gaps_google * gap_penalty) + (no_gaps_transcript * gap_penalty) + (
+                no_mismatches * mismatch_penalty) + (no_matches * match_reward)
 
     # Calculate a possible maximum score according to Needleman-Wunsch (i.e. every char is a match)
 
@@ -51,10 +56,17 @@ def get_sentence_confidence(transcript_sentence: str, google_start_confidence: f
     adjusted_max_score = max_sentence_score - min_sentence_score
     adjusted_score = sentence_score - min_sentence_score
 
-    alignment_confidence = adjusted_score / adjusted_max_score
+    normalized_sentence_score = adjusted_score / adjusted_max_score
 
     # print(min_sentence_score, max_sentence_score, sentence_score, alignment_confidence * ((google_start_confidence + google_end_confidence) / 2))
 
-    overall_confidence = alignment_confidence * ((google_start_confidence + google_end_confidence) / 2)
+    overall_confidence = normalized_sentence_score * ((google_start_confidence + google_end_confidence) / 2)
 
-    return overall_confidence
+    # return overall_confidence
+    return {
+        "overall_confidence": overall_confidence,
+        "normalized_sentence_score": normalized_sentence_score,
+        "google_start_confidence": google_start_confidence,
+        "google_end_confidence": google_end_confidence,
+        "average_google_confidence": (google_start_confidence + google_end_confidence) / 2
+    }
