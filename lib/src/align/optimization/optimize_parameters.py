@@ -44,7 +44,9 @@ def optimize_parameters(
         google_files_aligner.align_files(input_path, output_path, 0)
 
         result = compare_alignments(input_path, 0, "hand", "google", False, alignment_parameters)
-        score = result["scores"]["deviation"]["mean"] * (1 - (result["ious"]["mean"] * result["appearance"]["f1_score"]))
+
+        # score = result["scores"]["deviation"]["mean"] * (1 - (result["ious"]["mean"] * result["appearance"]["f1_score"]))
+        score = 1 - result["ious"]["mean"]
 
         bin_print(verbosity, 1, "Parameters:                         ", params)
         bin_print(verbosity, 1, "Achieved score (smaller == better): ", score)

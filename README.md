@@ -61,7 +61,6 @@ score_weights:
 filtering:
   threshold: float
   method: [ mark | delete ]
-
 ```
 
 ## CLI commands

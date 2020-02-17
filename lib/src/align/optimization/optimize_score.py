@@ -35,12 +35,15 @@ def optimize_score(
         alignment_parameters["score_weights"]["alignment_score"] = params[0][2]
         alignment_parameters["score_weights"]["google_confidence"] = params[0][3]
 
-        results = compare_alignments(input_path, 0, "hand", "google", False, alignment_parameters)
-        correlation = pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["calculated"]["all"])
+        results = compare_alignments(input_path, 0, "hand", "google", True, alignment_parameters)
 
-        bin_print(verbosity, 1, "Correlation: ", correlation)
+        correlation_ious = pearsonr_lists(results["scores"]["ious"]["all"], results["scores"]["calculated"]["all"])
+        correlation_deviation = pearsonr_lists(results["scores"]["ious"]["all"], results["scores"]["calculated"]["all"])
 
-        return 1 - abs(correlation)
+        bin_print(verbosity, 1, "Correlation IOUs: ", correlation_ious)
+        bin_print(verbosity, 1, "Correlation deviation: ", correlation_deviation)
+
+        return 1 - abs(correlation_ious)
 
     domain = [
         {'name': 'gaps_google', 'type': 'continuous', 'domain': (-100, 100)},
