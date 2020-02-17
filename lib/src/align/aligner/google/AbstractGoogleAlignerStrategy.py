@@ -142,6 +142,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
 
 
     @classmethod
+    @profile
     def align_per_sentence(cls, sentences: List[Sentence], transcript_alignment: str, google_alignment: str,
                            google_words: List[object], alignment_parameters: Dict[str, Any], alignment_score: int, verbosity: int) -> List[Sentence]:
         """
