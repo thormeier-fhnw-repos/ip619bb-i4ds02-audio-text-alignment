@@ -180,6 +180,22 @@ Args:
     -h:                      Prints this help
 ```
 
+## Bechnmarking
+
+### Memory usage
+
+For detailed memory usage, the package [memory_profiler](https://pypi.org/project/memory-profiler/) is used. The code contains several annotations to measure memory usage.  
+
+To measure, execute an arbitrary CLI command with the memory_profiler module:
+
+```
+python -m memory_profiler ./bin/{command and args}
+```
+
+### Execution time per sentence while aligning
+
+
+
 ## License
 
 MIT, see LICENSE.md

@@ -8,8 +8,10 @@ from lib.src.align.utils.calculate_overall_score import calculate_overall_score
 import numpy as np
 from typing import Dict, Any
 import os
+from memory_profiler import profile
 
 
+@profile
 def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, training_only: bool, config: Dict[str, Any]) -> Dict[str, Any]:
     """
     Compares all found alignments

@@ -13,6 +13,9 @@ from lib.src.align.utils.get_none_part import get_none_part
 from lib.src.align.utils.calculate_overall_score import calculate_overall_score
 import re
 from lib.src.model.AdditionalData import AdditionalData
+from memory_profiler import profile
+from time import time
+import numpy as np
 
 
 class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
@@ -22,6 +25,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
 
     @staticmethod
     @abc.abstractmethod
+    @profile
     def perform_alignment(transcript: str, google_output: object, verbosity: int,
                           alignment_parameters: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -139,7 +143,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
 
     @classmethod
     def align_per_sentence(cls, sentences: List[Sentence], transcript_alignment: str, google_alignment: str,
-                           google_words: List[object], alignment_parameters: Dict[str, Any], alignment_score: int, verbosity: int) -> None:
+                           google_words: List[object], alignment_parameters: Dict[str, Any], alignment_score: int, verbosity: int) -> List[Sentence]:
         """
         Assigns start and end times to sentences based on given alignments.
         :param sentences:            All sentences
@@ -156,7 +160,12 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
 
         sentence_index = 0
 
+        track_time = alignment_parameters["benchmark"]["exec_time"]
+        execution_times = []
+
         for sentence in sentences:
+            start_time = time()
+
             sentence_characters = list(preprocess_string(sentence.sentence))
 
             sentence_regex = '-*'.join(sentence_characters)
@@ -255,6 +264,13 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
             else:
                 sentence_index += 1
 
+            end_time = time()
+            execution_times.append(end_time - start_time)
+
             bin_print(verbosity, 2, "Sentence confidence:", str(sentence_confidence))
+
+        if track_time:
+            bin_print(verbosity, 0, "Execution time per sentence (mean):  ", np.mean(execution_times))
+            bin_print(verbosity, 0, "Execution time per sentence (median):", np.median(execution_times))
 
         return sentences
