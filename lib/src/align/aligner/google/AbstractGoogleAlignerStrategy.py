@@ -270,7 +270,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
             bin_print(verbosity, 2, "Sentence confidence:", str(sentence_confidence))
 
         if track_time:
-            bin_print(verbosity, 0, "Execution time per sentence (mean):  ", np.mean(execution_times))
-            bin_print(verbosity, 0, "Execution time per sentence (median):", np.median(execution_times))
+            bin_print(verbosity, 0, "Execution time per sentence (mean): ", np.mean(execution_times))
+            bin_print(verbosity, 0, "Execution time per sentence (max):  ", np.max(execution_times))
 
         return sentences
