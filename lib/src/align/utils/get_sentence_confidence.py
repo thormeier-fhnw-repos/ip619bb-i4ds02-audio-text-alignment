@@ -58,11 +58,8 @@ def get_sentence_confidence(google_start_confidence: float, google_end_confidenc
 
     normalized_sentence_score = adjusted_score / adjusted_max_score
 
-    # print(min_sentence_score, max_sentence_score, sentence_score, alignment_confidence * ((google_start_confidence + google_end_confidence) / 2))
-
     overall_confidence = normalized_sentence_score * ((google_start_confidence + google_end_confidence) / 2)
 
-    # return overall_confidence
     return {
         "overall_confidence": overall_confidence,
         "normalized_sentence_score": normalized_sentence_score,

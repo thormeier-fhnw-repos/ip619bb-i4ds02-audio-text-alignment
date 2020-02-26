@@ -15,17 +15,16 @@ def main(argv: list) -> None:
 Tries to find the best alignment parameters based on Bayesian optimization.
 
 Usage:
-    python optimize_parameters.py --path=<path> --config=<path> [-v|-vv|-vvv]
+    python optimize_parameters.py --path=<path> --config=<path> --convergence-plot-file=<path> [-v|-vv|-vvv]
 
 Args:
     --path:                  Path to read alignment data from
     --config:                Path to configuration
-    --convergence-plot-file: Filename for the plot of the convergence
-    --acquisition-plot-file: Filename for the plot of the acquisition (if possible to create)
+    --convergence-plot-file: Filename for the plot of the convergence, PNG
     -v|-vv|-vvv:             Verbosity level of the output
     -h:                      Prints this help
     """
-    args = ["path=", "config=", "convergence-plot-file=", "acquisition-plot-file="]
+    args = ["path=", "config=", "convergence-plot-file="]
 
     input_args = intro(title, description, args, argv)
 
@@ -42,7 +41,6 @@ Args:
         aligner,
         config,
         input_args["convergence-plot-file"],
-        input_args["acquisition-plot-file"],
         input_args["verbosity"]
     )
 

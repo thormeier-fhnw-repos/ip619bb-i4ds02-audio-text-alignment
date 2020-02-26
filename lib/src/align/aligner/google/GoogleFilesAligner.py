@@ -6,6 +6,7 @@ from bin._bin import bin_print
 from os import listdir
 from os.path import isfile, join
 from json import load
+import numpy as np
 
 
 class GoogleFilesAligner(FilesAligner):
@@ -33,8 +34,11 @@ class GoogleFilesAligner(FilesAligner):
         """
         bin_print(verbosity, 1, "Loading all transcript files from " + input_path + "...")
         file_names = [f.replace(".wav", "") for f in listdir(input_path) if
-                      isfile(join(input_path, f)) and f.split('.')[
-                          1] == "wav"]
+                      isfile(join(input_path, f)) and f.split('.')[1] == "wav"
+                      # and (
+                      #     f.startswith("podclub") or f.startswith("stadt_zuerich")
+                      # )
+                      ]
 
         bin_print(verbosity, 3, "Found files:", file_names)
 
@@ -61,3 +65,6 @@ class GoogleFilesAligner(FilesAligner):
                 f.write("\n".join([sentence.to_audacity_label_format() for sentence in alignment]))
                 bin_print(verbosity, 2, "Wrote " + output_filename)
                 f.close()
+
+        bin_print(verbosity, 0, "Execution time per sentence (mean): ", (np.mean(self.aligner.execution_times) + np.mean(self.aligner.alignment_times)))
+        bin_print(verbosity, 0, "Execution time per sentence (max):  ", (np.max(self.aligner.execution_times) + np.max(self.aligner.alignment_times)))

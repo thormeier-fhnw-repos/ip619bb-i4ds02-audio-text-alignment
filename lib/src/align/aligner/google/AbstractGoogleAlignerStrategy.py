@@ -15,7 +15,6 @@ import re
 from lib.src.model.AdditionalData import AdditionalData
 from memory_profiler import profile
 from time import time
-import numpy as np
 
 
 class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
@@ -25,7 +24,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
 
     @staticmethod
     @abc.abstractmethod
-    @profile
+    # @profile
     def perform_alignment(transcript: str, google_output: object, verbosity: int,
                           alignment_parameters: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -61,8 +60,12 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         bin_print(verbosity, 3, "Preprocessed transcript text:", transcript_text)
         bin_print(verbosity, 3, "Preprocessed google text:", google_text)
 
+        start_time = time()
         # Call actual implementation of the alignment.
         alignment = cls.perform_alignment(transcript_text, google_text, verbosity, alignment_parameters)
+        end_time = time()
+
+        cls.alignment_times.append((end_time - start_time) / len(sentences))
 
         google_alignment = alignment["google"]
         transcript_alignment = alignment["transcript"]
@@ -121,8 +124,6 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         """
         return preprocess_string(transcript)
 
-
-
     @staticmethod
     def mark_sentence_not_appearing(sentence: Sentence, alignment_parameters: Dict[str, Any],
                                     last_end_time: float) -> None:
@@ -140,9 +141,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
             sentence.interval.start = "-"
             sentence.interval.end = "-"
 
-
     @classmethod
-    @profile
     def align_per_sentence(cls, sentences: List[Sentence], transcript_alignment: str, google_alignment: str,
                            google_words: List[object], alignment_parameters: Dict[str, Any], alignment_score: int, verbosity: int) -> List[Sentence]:
         """
@@ -160,9 +159,6 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         last_end_time = 0.0
 
         sentence_index = 0
-
-        track_time = alignment_parameters["benchmark"]["exec_time"]
-        execution_times = []
 
         for sentence in sentences:
             start_time = time()
@@ -266,12 +262,8 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                 sentence_index += 1
 
             end_time = time()
-            execution_times.append(end_time - start_time)
+            cls.execution_times.append(end_time - start_time)
 
             bin_print(verbosity, 2, "Sentence confidence:", str(sentence_confidence))
-
-        if track_time:
-            bin_print(verbosity, 0, "Execution time per sentence (mean): ", np.mean(execution_times))
-            bin_print(verbosity, 0, "Execution time per sentence (max):  ", np.max(execution_times))
 
         return sentences

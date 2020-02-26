@@ -11,7 +11,7 @@ import os
 from memory_profiler import profile
 
 
-@profile
+# @profile
 def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, training_only: bool, config: Dict[str, Any]) -> Dict[str, Any]:
     """
     Compares all found alignments
@@ -80,22 +80,22 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
         ]
 
         current_google_confidence = [
-            (pair[1].additional_data.google_confidence) for pair in sentence_pairs
+            (pair[1].additional_data.google_confidence if pair[1].additional_data else 0.001) for pair in sentence_pairs
             if (pair[0].interval.get_length() > epsilon and pair[1].interval.get_length() > epsilon)
         ]
 
         current_sentence_scores = [
-            (pair[1].additional_data.normalized_sentence_score) for pair in sentence_pairs
+            (pair[1].additional_data.normalized_sentence_score if pair[1].additional_data else 0.001) for pair in sentence_pairs
             if (pair[0].interval.get_length() > epsilon and pair[1].interval.get_length() > epsilon)
         ]
 
         current_transcript_gaps = [
-            (pair[1].additional_data.gaps_transcript) for pair in sentence_pairs
+            (pair[1].additional_data.gaps_transcript if pair[1].additional_data else 0.001) for pair in sentence_pairs
             if (pair[0].interval.get_length() > epsilon and pair[1].interval.get_length() > epsilon)
         ]
 
         current_google_gaps = [
-            (pair[1].additional_data.gaps_google) for pair in sentence_pairs
+            (pair[1].additional_data.gaps_google if pair[1].additional_data else 0.001) for pair in sentence_pairs
             if (pair[0].interval.get_length() > epsilon and pair[1].interval.get_length() > epsilon)
         ]
 

@@ -5,6 +5,8 @@ algorithm:
   mismatch_penalty: -31.86148336
   gap_penalty: 0
 
+optimize_params_formula: deviation * (1 - (iou * f1))
+
 no_appearance:
   type: character
   interval_length: 0.0001

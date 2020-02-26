@@ -12,7 +12,6 @@ def optimize_parameters(
         google_files_aligner: GoogleFilesAligner,
         alignment_parameters: Dict[str, Any],
         convergence_plot_file: str,
-        acquisition_plot_file: str,
         verbosity: int
 ) -> None:
     """
@@ -22,7 +21,6 @@ def optimize_parameters(
     :param google_files_aligner:  GoogleFLiesAligner to re-align every epoch
     :param alignment_parameters:  Alignment parameters for comparison
     :param convergence_plot_file: Where to save the convergence plot
-    :param acquisition_plot_file: Where to save the acquisition plot
     :param verbosity:             Verbosity of the output
     :return: None
     """
@@ -43,10 +41,17 @@ def optimize_parameters(
 
         google_files_aligner.align_files(input_path, output_path, 0)
 
+        # Not "training_only", because we're using a further boiled down training set.
         result = compare_alignments(input_path, 0, "hand", "google", False, alignment_parameters)
 
-        # score = result["scores"]["deviation"]["mean"] * (1 - (result["ious"]["mean"] * result["appearance"]["f1_score"]))
-        score = 1 - result["ious"]["mean"]
+        # Configurable, see config.example.yml
+        score = eval(google_files_aligner.alignment_parameters["optimize_params_formula"], {'__builtins__': None}, {
+            'deviation': result["scores"]["deviation"]["mean"],
+            'iou': result["ious"]["mean"],
+            'f1': result["appearance"]["f1_score"],
+            'precision': result["appearance"]["precision"],
+            'recall': result["appearance"]["recall"],
+        })
 
         bin_print(verbosity, 1, "Parameters:                         ", params)
         bin_print(verbosity, 1, "Achieved score (smaller == better): ", score)
@@ -59,11 +64,16 @@ def optimize_parameters(
         {'name': 'gap_penalty', 'type': 'continuous', 'domain': (-100, 0)},
     ]
 
-    bopt = BayesianOptimization(f=optimize_function, domain=domain)
+    bopt = BayesianOptimization(
+        f=optimize_function,
+        domain=domain,
+        model_type='GP',
+        acquisition_type='EI',
+        acquisition_jitter=0.05
+    )
 
     bopt.run_optimization(max_iter=25)
 
     bopt.plot_convergence(filename=convergence_plot_file)
-    bopt.plot_acquisition(filename=acquisition_plot_file)
 
     bin_print(verbosity, 0, "Best values:", bopt.x_opt)

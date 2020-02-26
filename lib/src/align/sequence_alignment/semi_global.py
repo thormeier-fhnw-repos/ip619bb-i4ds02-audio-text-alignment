@@ -1,8 +1,10 @@
 from typing import List, Tuple, Callable
 from lib.src.align.sequence_alignment.create_score_matrix import create_score_matrix
 from lib.src.align.sequence_alignment.walk_matrix import walk_matrix
+from memory_profiler import profile
 
 
+# @profile
 def semi_global(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_penalty: int,
                 compare_function: Callable) -> Tuple[List, List, int]:
     """

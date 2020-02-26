@@ -87,7 +87,6 @@ Args:
         bin_print(verbosity, 0, "Outputting copy/pastable list of low (<0.3) mean IOU files:")
         print(results["ious"]["low"])
 
-
     tPearson = PrettyTable()
     tPearson.field_names = ["", "IOU", "Deviation", "Alignment score", "Google confidence", "Calculated confidence", "Google gaps percentage", "Transcript gaps percentage", "Calculated score"]
     tPearson.add_row([

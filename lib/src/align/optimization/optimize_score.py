@@ -9,7 +9,6 @@ def optimize_score(
         input_path: str,
         alignment_parameters: Dict[str, Any],
         convergence_plot_file: str,
-        acquisition_plot_file: str,
         verbosity: int
 ) -> None:
     """
@@ -17,7 +16,6 @@ def optimize_score(
     :param input_path:            Path to load all alignments from
     :param alignment_parameters:  Alignment parameters for comparison
     :param convergence_plot_file: Where to save the convergence plot
-    :param acquisition_plot_file: Where to save the acquisition plot
     :param verbosity:             Verbosity of the output
     :return: None
     """
@@ -38,12 +36,13 @@ def optimize_score(
         results = compare_alignments(input_path, 0, "hand", "google", True, alignment_parameters)
 
         correlation_ious = pearsonr_lists(results["scores"]["ious"]["all"], results["scores"]["calculated"]["all"])
-        correlation_deviation = pearsonr_lists(results["scores"]["ious"]["all"], results["scores"]["calculated"]["all"])
+        correlation_deviation = pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["calculated"]["all"])
 
         bin_print(verbosity, 1, "Correlation IOUs: ", correlation_ious)
         bin_print(verbosity, 1, "Correlation deviation: ", correlation_deviation)
 
-        return 1 - abs(correlation_ious)
+        # Only maximize correlation with IOU
+        return abs(correlation_ious)
 
     domain = [
         {'name': 'gaps_google', 'type': 'continuous', 'domain': (-100, 100)},
@@ -52,11 +51,17 @@ def optimize_score(
         {'name': 'google_confidence', 'type': 'continuous', 'domain': (-100, 100)},
     ]
 
-    bopt = BayesianOptimization(f=optimize_function, domain=domain)
+    bopt = BayesianOptimization(
+        f=optimize_function,
+        domain=domain,
+        model_type='GP',
+        acquisition_type='EI',
+        acquisition_jitter=0.05,
+        maximize=True
+    )
 
     bopt.run_optimization(max_iter=250)
 
     bopt.plot_convergence(filename=convergence_plot_file)
-    bopt.plot_acquisition(filename=acquisition_plot_file)
 
     bin_print(verbosity, 0, "Best values:", bopt.x_opt)

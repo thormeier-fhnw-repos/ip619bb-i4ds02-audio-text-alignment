@@ -1,6 +1,7 @@
 from lib.src.align.aligner.google.AbstractGoogleAlignerStrategy import AbstractGoogleAlignerStrategy
 from lib.src.align.sequence_alignment.semi_global import semi_global
 from typing import Dict, Any
+from memory_profiler import profile
 
 
 class GoogleSemiglobalCharacterAlignerStrategy(AbstractGoogleAlignerStrategy):
@@ -9,6 +10,7 @@ class GoogleSemiglobalCharacterAlignerStrategy(AbstractGoogleAlignerStrategy):
     """
 
     @staticmethod
+    # @profile
     def perform_alignment(transcript: str, google_output: object, verbosity: int,
                           alignment_parameters: Dict[str, Any]) -> Dict[str, Any]:
         def compare(a: str, b: str) -> bool:

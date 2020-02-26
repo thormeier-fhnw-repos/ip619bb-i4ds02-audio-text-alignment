@@ -8,6 +8,16 @@ class AbstractAlignerStrategy(abc.ABC):
     Abstract base class to allow typehinting.
     """
 
+    """
+    List of execution times per sentence
+    """
+    execution_times = []
+
+    """
+    List of alingment time consumption
+    """
+    alignment_times = []
+
     @staticmethod
     @abc.abstractmethod
     def perform_alignment(transcript: str, wav_path: str, verbosity: int) -> List[Sentence]:
