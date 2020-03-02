@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 
-sys.path.append('.')
+sys.path.append(".")
 
 import os
 from bin._bin import intro, bin_print
@@ -34,7 +34,7 @@ Args:
                        ["path=", "authpath=", "outpath=", "bucket="], argv)
 
     # Authenticate globally with specified client JSON
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = input_args["authpath"]
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = input_args["authpath"]
 
     start = time.time()
     get_and_save_raw(input_args["path"], input_args["bucket"], input_args["outpath"], input_args["verbosity"])

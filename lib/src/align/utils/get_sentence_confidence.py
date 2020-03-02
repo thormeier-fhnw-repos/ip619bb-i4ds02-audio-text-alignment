@@ -17,12 +17,12 @@ def get_sentence_confidence(google_start_confidence: float, google_end_confidenc
     """
 
     # Count all gaps: they contribute to overall score
-    no_gaps_transcript = alignment_transcript_sentence.count('-')
-    no_gaps_google = alignment_google_sentence.count('-')
+    no_gaps_transcript = alignment_transcript_sentence.count("-")
+    no_gaps_google = alignment_google_sentence.count("-")
 
     # Remove all gap characters
-    transcript_alignment_sentence_gapless = alignment_transcript_sentence.replace('-', '')
-    transcript_google_sentence_gapless = alignment_google_sentence.replace('-', '')
+    transcript_alignment_sentence_gapless = alignment_transcript_sentence.replace("-", "")
+    transcript_google_sentence_gapless = alignment_google_sentence.replace("-", "")
 
     no_matches = 0
     no_mismatches = 0

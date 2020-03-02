@@ -35,5 +35,5 @@ class TestLoadAlignment(unittest.TestCase):
             self.assertIsInstance(el, Sentence)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -56,5 +56,5 @@ class TestIntersectionOverUnion(unittest.TestCase):
         self.assertEqual(intersection_over_union(a, b), expected_value)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

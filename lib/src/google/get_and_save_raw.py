@@ -18,7 +18,7 @@ def get_and_save_raw(input_path: str, bucket_name: str, out_path: str, verbosity
     bin_print(verbosity, 1, "Reading files from", input_path)
 
     bin_print(verbosity, 2, "Trying to find all .flac files...")
-    flac_files = [f for f in listdir(input_path) if isfile(join(input_path, f)) and f.split('.')[1] == "flac"]
+    flac_files = [f for f in listdir(input_path) if isfile(join(input_path, f)) and f.split(".")[1] == "flac"]
     bin_print(verbosity, 3, "Found flac files:", flac_files)
     bin_print(verbosity, 3, "Total flac files:", len(flac_files))
 
@@ -30,7 +30,7 @@ def get_and_save_raw(input_path: str, bucket_name: str, out_path: str, verbosity
             bin_print(verbosity, 2, "Processing " + flac_file)
             try:
                 json = get_raw("gs://" + bucket_name + "/" + flac_file, client)
-                json_path = out_path + "/" + flac_file.replace('.flac', '_google_output') + ".json"
+                json_path = out_path + "/" + flac_file.replace(".flac", "_google_output") + ".json"
                 bin_print(verbosity, 2, "Writing " + json_path)
                 f = open(json_path, "w")
                 f.write(json)

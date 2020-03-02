@@ -45,17 +45,17 @@ def optimize_score(
         return abs(correlation_ious)
 
     domain = [
-        {'name': 'gaps_google', 'type': 'continuous', 'domain': (-100, 100)},
-        {'name': 'gaps_transcript', 'type': 'continuous', 'domain': (-100, 100)},
-        {'name': 'alignment_score', 'type': 'continuous', 'domain': (-100, 100)},
-        {'name': 'google_confidence', 'type': 'continuous', 'domain': (-100, 100)},
+        {"name": "gaps_google", "type": "continuous", "domain": (-100, 100)},
+        {"name": "gaps_transcript", "type": "continuous", "domain": (-100, 100)},
+        {"name": "alignment_score", "type": "continuous", "domain": (-100, 100)},
+        {"name": "google_confidence", "type": "continuous", "domain": (-100, 100)},
     ]
 
     bopt = BayesianOptimization(
         f=optimize_function,
         domain=domain,
-        model_type='GP',
-        acquisition_type='EI',
+        model_type="GP",
+        acquisition_type="EI",
         acquisition_jitter=0.05,
         maximize=True
     )

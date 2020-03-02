@@ -46,5 +46,5 @@ class TestGetAligner(unittest.TestCase):
         self.assertIsInstance(aligner.aligner, expected_strategy.__class__)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

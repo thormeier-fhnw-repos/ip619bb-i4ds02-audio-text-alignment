@@ -29,10 +29,10 @@ class FilesAligner:
         """
         bin_print(verbosity, 1, "Reading files from", input_path)
 
-        files = [f for f in listdir(input_path) if isfile(join(input_path, f)) and f.split('.')[1] == "wav"]
+        files = [f for f in listdir(input_path) if isfile(join(input_path, f)) and f.split(".")[1] == "wav"]
         bin_print(verbosity, 2, "WAVE files found:", "\n    -", "\n    - ".join(files))
 
-        file_pairs = [(f, f + ".txt", f + ".wav") for f in [input_path + f.split('.')[0] for f in files]]
+        file_pairs = [(f, f + ".txt", f + ".wav") for f in [input_path + f.split(".")[0] for f in files]]
 
         for file_pair in file_pairs:
             bin_print(verbosity, 2, "Creating alignment for " + file_pair[0] + ".*")

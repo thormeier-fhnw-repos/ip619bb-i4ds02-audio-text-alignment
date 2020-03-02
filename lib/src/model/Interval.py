@@ -11,7 +11,7 @@ class Interval:
         self.start = start
         self.end = end
 
-    def get_intersection(self, other: 'Interval') -> float:
+    def get_intersection(self, other: "Interval") -> float:
         """
         Returns the relative intersection area of this pair with another.
         :param other: Interval
@@ -30,7 +30,7 @@ class Interval:
 
         return end - start if area >= 0 else 0
 
-    def get_union(self, other: 'Interval') -> float:
+    def get_union(self, other: "Interval") -> float:
         """
         Returns the total area of this pair with another.
         :param other: Interval
@@ -57,7 +57,7 @@ class Interval:
 
         return 0.0
 
-    def get_deviation(self, other: 'Interval'):
+    def get_deviation(self, other: "Interval"):
         """
         Calculates the deviation of this interval with some other interval
         :param other: The other interval

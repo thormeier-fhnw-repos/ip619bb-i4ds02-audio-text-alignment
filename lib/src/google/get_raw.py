@@ -16,7 +16,7 @@ def get_raw(file_name: str, client: speech.SpeechClient) -> str:
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
         sample_rate_hertz=44100,
-        language_code='de-DE',
+        language_code="de-DE",
         enable_word_time_offsets=True
     )
 

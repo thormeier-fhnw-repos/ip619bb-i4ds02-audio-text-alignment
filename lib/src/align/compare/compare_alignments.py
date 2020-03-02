@@ -33,7 +33,7 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
 
     bin_print(verbosity, 2, "Trying to find all .txt files...")
     txt_files = [input_path + os.sep + f for f in listdir(input_path) if
-                 isfile(join(input_path, f)) and f.split('.')[1] == "txt"]
+                 isfile(join(input_path, f)) and f.split(".")[1] == "txt"]
     bin_print(verbosity, 3, "Found txt files:", txt_files)
 
     bin_print(verbosity, 2, "Filtering found files by ones containing alignment by " + type1 + "...")
@@ -67,8 +67,8 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
             continue
 
         sentence_pairs = [pair for pair in list(zip(type1_aligned_sentences, type2_aligned_sentences))
-                          if (not training_only or pair[0].sentence.startswith('[TRAINING]'))
-                          and not pair[1].sentence.startswith('[BAD]')  # Filter out "bad" sentences.
+                          if (not training_only or pair[0].sentence.startswith("[TRAINING]"))
+                          and not pair[1].sentence.startswith("[BAD]")  # Filter out "bad" sentences.
                           ]
 
         total_sentences += len(sentence_pairs)

@@ -30,7 +30,7 @@ class Sentence:
 
         return formatted
 
-    def merge_with(self, other: 'Sentence') -> 'Sentence':
+    def merge_with(self, other: "Sentence") -> "Sentence":
         """
         Merges two sentences
         :param other:

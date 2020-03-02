@@ -117,5 +117,5 @@ class TestInterval(unittest.TestCase):
         self.assertEqual(a.to_formatted(), expected_formatted)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

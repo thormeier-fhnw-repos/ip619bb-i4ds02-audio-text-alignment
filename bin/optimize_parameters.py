@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 
-sys.path.append('.')
+sys.path.append(".")
 
 from bin._bin import intro, bin_print, load_config
 import time

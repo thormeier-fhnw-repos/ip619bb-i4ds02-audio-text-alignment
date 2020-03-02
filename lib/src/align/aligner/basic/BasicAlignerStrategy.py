@@ -17,9 +17,9 @@ class BasicAlignerStrategy(AbstractAlignerStrategy):
         audio_segment = AudioSegment.from_wav(wav_path)
         duration = audio_segment.duration_seconds
 
-        with open(transcript, encoding='utf-8') as f:
+        with open(transcript, encoding="utf-8") as f:
             transcript = f.read()
-        transcript = transcript.replace('\n', ' ')
+        transcript = transcript.replace("\n", " ")
 
         sentences = transcript_to_sentences(transcript)
 

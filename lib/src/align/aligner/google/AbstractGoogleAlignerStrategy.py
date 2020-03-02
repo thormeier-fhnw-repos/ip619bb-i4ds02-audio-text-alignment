@@ -103,7 +103,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         :param transcript: Transcript as string
         :return: List of Sentence instances
         """
-        return transcript_to_sentences(transcript.replace('\n', ' '))
+        return transcript_to_sentences(transcript.replace("\n", " "))
 
     @staticmethod
     def get_google_text(google_words: List) -> str:
@@ -113,7 +113,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         :return: Google output as string
         """
         google_word_list = [w["word"] for w in google_words if not all(c in punctuation for c in w["word"])]
-        return preprocess_string(' '.join(google_word_list))
+        return preprocess_string(" ".join(google_word_list))
 
     @staticmethod
     def get_transcript_text(transcript: str) -> str:
@@ -165,7 +165,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
 
             sentence_characters = list(preprocess_string(sentence.sentence))
 
-            sentence_regex = '-*'.join(sentence_characters)
+            sentence_regex = "-*".join(sentence_characters)
 
             try:
                 alignment_match = re.search(sentence_regex, transcript_alignment[last_end_point:])
@@ -192,8 +192,8 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                 continue
 
             google_sub_start = len(
-                [c for c in google_alignment[0:alignment_start_point] if c is not '-' and c is not ' '])
-            google_sub_end = len([c for c in google_alignment[0:alignment_end_point] if c is not '-' and c is not ' '])
+                [c for c in google_alignment[0:alignment_start_point] if c is not "-" and c is not " "])
+            google_sub_end = len([c for c in google_alignment[0:alignment_end_point] if c is not "-" and c is not " "])
 
             character_count = 0
             found_start = False

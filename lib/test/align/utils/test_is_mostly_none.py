@@ -10,13 +10,13 @@ class TestIsMostlyNone(unittest.TestCase):
     """
 
     is_mostly_none_data_provider = lambda: (
-        (list('-'), True),
-        (list('a'), False),
-        (list('a-'), False),
-        (list('a--'), False),
-        (list('a---'), False),
-        (list('a----'), False),
-        (list('a-----'), True),
+        (list("-"), True),
+        (list("a"), False),
+        (list("a-"), False),
+        (list("a--"), False),
+        (list("a---"), False),
+        (list("a----"), False),
+        (list("a-----"), True),
         ([], True),
     )
 
@@ -32,5 +32,5 @@ class TestIsMostlyNone(unittest.TestCase):
 
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

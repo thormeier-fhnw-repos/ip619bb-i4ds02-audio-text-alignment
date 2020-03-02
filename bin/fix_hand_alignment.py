@@ -1,7 +1,8 @@
 #!/usr/bin/python
 import sys
 
-sys.path.append('.')
+sys.path.append(".")
+
 from bin._bin import intro, bin_print
 from lib.src.align.utils.fix_hand_alignments import fix_hand_alignments
 import time

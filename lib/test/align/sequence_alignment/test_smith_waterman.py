@@ -33,9 +33,9 @@ class TestSmithWaterman(unittest.TestCase):
         :return: None
         """
         self.assert_result(
-            ['C', 'T', 'C', 'A', 'T', 'G', 'C'],
-            ['A', 'C', 'A', 'A', 'T', 'C', 'G'],
-            (['C', None, 'A', 'T', 'G', 'C'], ['C', 'A', 'A', 'T', None, 'C'], 6.0)
+            ["C", "T", "C", "A", "T", "G", "C"],
+            ["A", "C", "A", "A", "T", "C", "G"],
+            (["C", None, "A", "T", "G", "C"], ["C", "A", "A", "T", None, "C"], 6.0)
         )
 
     def test_perfect_align(self) -> None:
@@ -44,9 +44,9 @@ class TestSmithWaterman(unittest.TestCase):
         :return: None
         """
         self.assert_result(
-            ['F', 'O', 'O', 'B', 'A', 'R'],
-            ['F', 'O', 'O', 'B', 'A', 'R'],
-            (['F', 'O', 'O', 'B', 'A', 'R'], ['F', 'O', 'O', 'B', 'A', 'R'], 12.0)
+            ["F", "O", "O", "B", "A", "R"],
+            ["F", "O", "O", "B", "A", "R"],
+            (["F", "O", "O", "B", "A", "R"], ["F", "O", "O", "B", "A", "R"], 12.0)
         )
 
     def test_empty_alignment(self) -> None:
@@ -55,7 +55,7 @@ class TestSmithWaterman(unittest.TestCase):
         :return: None
         """
         self.assert_result(
-            ['F', 'O', 'O'],
-            ['B', 'A', 'R'],
+            ["F", "O", "O"],
+            ["B", "A", "R"],
             ([], [], 0.0)
         )

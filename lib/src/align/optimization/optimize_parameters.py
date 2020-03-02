@@ -45,12 +45,12 @@ def optimize_parameters(
         result = compare_alignments(input_path, 0, "hand", "google", False, alignment_parameters)
 
         # Configurable, see config.example.yml
-        score = eval(google_files_aligner.alignment_parameters["optimize_params_formula"], {'__builtins__': None}, {
-            'deviation': result["scores"]["deviation"]["mean"],
-            'iou': result["ious"]["mean"],
-            'f1': result["appearance"]["f1_score"],
-            'precision': result["appearance"]["precision"],
-            'recall': result["appearance"]["recall"],
+        score = eval(google_files_aligner.alignment_parameters["optimize_params_formula"], {"__builtins__": None}, {
+            "deviation": result["scores"]["deviation"]["mean"],
+            "iou": result["ious"]["mean"],
+            "f1": result["appearance"]["f1_score"],
+            "precision": result["appearance"]["precision"],
+            "recall": result["appearance"]["recall"],
         })
 
         bin_print(verbosity, 1, "Parameters:                         ", params)
@@ -59,16 +59,16 @@ def optimize_parameters(
         return score
 
     domain = [
-        {'name': 'match_reward', 'type': 'continuous', 'domain': (0, 100)},
-        {'name': 'mismatch_penalty', 'type': 'continuous', 'domain': (-100, 0)},
-        {'name': 'gap_penalty', 'type': 'continuous', 'domain': (-100, 0)},
+        {"name": "match_reward", "type": "continuous", "domain": (0, 100)},
+        {"name": "mismatch_penalty", "type": "continuous", "domain": (-100, 0)},
+        {"name": "gap_penalty", "type": "continuous", "domain": (-100, 0)},
     ]
 
     bopt = BayesianOptimization(
         f=optimize_function,
         domain=domain,
-        model_type='GP',
-        acquisition_type='EI',
+        model_type="GP",
+        acquisition_type="EI",
         acquisition_jitter=0.05
     )
 

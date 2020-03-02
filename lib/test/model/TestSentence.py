@@ -99,5 +99,5 @@ class TestSentence(unittest.TestCase):
         self.assertEqual(s.interval.end, expected_end)
         self.assertEqual(s.sentence, expected_sentence)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

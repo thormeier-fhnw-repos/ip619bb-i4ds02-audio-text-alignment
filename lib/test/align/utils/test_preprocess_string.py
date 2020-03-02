@@ -28,5 +28,5 @@ class TestPreprocessString(unittest.TestCase):
         self.assertEqual(expected_output, preprocess_string(expected_output))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

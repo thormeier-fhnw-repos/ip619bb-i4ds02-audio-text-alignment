@@ -32,7 +32,7 @@ class GoogleSemiglobalCharacterAlignerStrategy(AbstractGoogleAlignerStrategy):
         )
 
         return {
-            "google": ''.join([c if c is not None else '-' for c in alignment[0]]),
-            "transcript": ''.join([c if c is not None else '-' for c in alignment[1]]),
+            "google": ''.join([c if c is not None else "-" for c in alignment[0]]),
+            "transcript": ''.join([c if c is not None else "-" for c in alignment[1]]),
             "score": alignment[2]
         }

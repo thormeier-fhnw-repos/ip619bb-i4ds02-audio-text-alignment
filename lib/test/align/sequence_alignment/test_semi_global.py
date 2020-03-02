@@ -33,7 +33,7 @@ class TestSmithWaterman(unittest.TestCase):
         :return: None
         """
         self.assert_result(
-            ['A', 'T', 'C', 'C', 'G', 'A', 'A', 'C', 'A', 'T', 'C', 'C', 'A', 'A', 'T', 'C', 'G', 'A', 'A', 'G', 'C'],
-            ['A', 'G', 'C', 'A', 'T', 'G', 'C', 'A', 'A', 'T'],
-            (['A',  'T',  'C',  'C',  'G',  'A', 'A', 'C', 'A', 'T', 'C', 'C', 'A', 'A', 'T',  'C',  'G',  'A',  'A',  'G',  'C'], [None, None, None, None, None, 'A', 'G', 'C', 'A', 'T', 'G', 'C', 'A', 'A', 'T', None, None, None, None, None, None], 8.0)
+            ["A", "T", "C", "C", "G", "A", "A", "C", "A", "T", "C", "C", "A", "A", "T", "C", "G", "A", "A", "G", "C"],
+            ["A", "G", "C", "A", "T", "G", "C", "A", "A", "T"],
+            (["A",  "T",  "C",  "C",  "G",  "A", "A", "C", "A", "T", "C", "C", "A", "A", "T",  "C",  "G",  "A",  "A",  "G",  "C"], [None, None, None, None, None, "A", "G", "C", "A", "T", "G", "C", "A", "A", "T", None, None, None, None, None, None], 8.0)
         )

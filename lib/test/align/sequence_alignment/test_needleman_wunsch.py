@@ -29,7 +29,7 @@ class TestNeedlemanWunsch(unittest.TestCase):
         ([2, 3], [1, 2, 3, 4], ([None, 2, 3, None], [1, 2, 3, 4], -10.0)),  # Test if a gap is introduced at the start and end
         ([3], [1, 2, 3, 4, 5], ([None, None, 3, None, None], [1, 2, 3, 4, 5], -35.0)),  # Test if a gap is introduced at the start and end
         ([2, 4], [1, 2, 3, 4, 5], ([None, 2, None, 4, None], [1, 2, 3, 4, 5], -20.0)),  # Test if a gap is introduced at the start, end and in between
-        (['F', 'R', 'I', 'E', 'D'], ['F', 'R', 'E', 'S', 'H'], (['F', 'R', 'I', 'E', None, 'D'], ['F', 'R', None, 'E', 'S', 'H'], -20.0)),  # Test alignment example from paper.
+        (["F", "R", "I", "E", "D"], ["F", "R", "E", "S", "H"], (["F", "R", "I", "E", None, "D"], ["F", "R", None, "E", "S", "H"], -20.0)),  # Test alignment example from paper.
     )
 
     @data_provider(needleman_wunsch_data_provider)

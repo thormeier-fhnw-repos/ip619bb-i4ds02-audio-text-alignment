@@ -34,7 +34,7 @@ class GoogleFilesAligner(FilesAligner):
         """
         bin_print(verbosity, 1, "Loading all transcript files from " + input_path + "...")
         file_names = [f.replace(".wav", "") for f in listdir(input_path) if
-                      isfile(join(input_path, f)) and f.split('.')[1] == "wav"
+                      isfile(join(input_path, f)) and f.split(".")[1] == "wav"
                       # and (
                       #     f.startswith("podclub") or f.startswith("stadt_zuerich")
                       # )
@@ -46,10 +46,10 @@ class GoogleFilesAligner(FilesAligner):
             bin_print(verbosity, 2, "Aligning " + file + "...")
             transcript_file = file + ".txt"
 
-            with open(join(input_path, transcript_file), encoding='utf-8-sig') as read_file:
+            with open(join(input_path, transcript_file), encoding="utf-8-sig") as read_file:
                 transcript = read_file.read()
 
-            with open(join(input_path, file + "_google_output.json"), "r", encoding='utf-8-sig') as read_file:
+            with open(join(input_path, file + "_google_output.json"), "r", encoding="utf-8-sig") as read_file:
                 # Convert back to object-like structure, so the underlying
                 # alignment function doesn't imply non-object like structures,
                 # such as dicts. This is particularly useful when working with
