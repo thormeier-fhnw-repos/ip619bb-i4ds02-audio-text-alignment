@@ -1,6 +1,6 @@
 from lib.src.align.aligner.google.AbstractGoogleAlignerStrategy import AbstractGoogleAlignerStrategy
 from typing import Dict, Any
-from Bio import pairwise2
+import Bio
 
 
 class GoogleBiopythonAlignerStrategy(AbstractGoogleAlignerStrategy):
@@ -11,7 +11,7 @@ class GoogleBiopythonAlignerStrategy(AbstractGoogleAlignerStrategy):
     @staticmethod
     def perform_alignment(transcript: str, google_output: object, verbosity: int,
                           alignment_parameters: Dict[str, Any]) -> Dict[str, Any]:
-        alignments = pairwise2.align.localms(
+        alignments = Bio.pairwise2.align.localms(
             google_output,
             transcript,
             alignment_parameters["algorithm"]["match_reward"],

@@ -3,7 +3,7 @@ from lib.src.align.aligner.FilesAligner import FilesAligner
 from lib.src.align.aligner.basic.BasicAlignerStrategy import BasicAlignerStrategy
 from lib.src.align.aligner.random.RandomAlignerStrategy import RandomAlignerStrategy
 from lib.src.align.aligner.google.GoogleFilesAligner import GoogleFilesAligner
-# from lib.src.align.aligner.google.GoogleBiopythonAlignerStrategy import GoogleBiopythonAlignerStrategy
+from lib.src.align.aligner.google.GoogleBiopythonAlignerStrategy import GoogleBiopythonAlignerStrategy
 from lib.src.align.aligner.google.GoogleGlobalCharacterAlignerStrategy import GoogleGlobalCharacterAlignerStrategy
 from lib.src.align.aligner.google.GoogleGlobalWordAlignerStrategy import GoogleGlobalWordAlignerStrategy
 from lib.src.align.aligner.google.GoogleSemiglobalCharacterAlignerStrategy import GoogleSemiglobalCharacterAlignerStrategy
@@ -21,8 +21,7 @@ def _random(alignment_parameters):
 
 
 def _google_biopython(alignment_parameters):
-    return None
-    # return GoogleFilesAligner(GoogleBiopythonAlignerStrategy, alignment_parameters)
+    return GoogleFilesAligner(GoogleBiopythonAlignerStrategy, alignment_parameters)
 
 
 def _google_global_character(alignment_parameters):

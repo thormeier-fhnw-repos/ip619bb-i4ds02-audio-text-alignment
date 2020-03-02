@@ -201,7 +201,7 @@ For detailed memory usage, the package [memory_profiler](https://pypi.org/projec
 
 To measure, execute an arbitrary CLI command with the memory_profiler module:
 
-```
+```shell script
 python -m memory_profiler ./bin/{command and args}
 ```
 
@@ -210,6 +210,18 @@ The annotation `@profile` can be used to measure memory usage of several methods
 ### Execution time per sentence while aligning
 
 Is measured in the code itself and output with a necessary verbosity of 0.
+
+## Unit tests
+
+To execute all unit tests, execute the following in project root:
+
+```shell script
+python -m unittest discover .
+```
+
+## IOU Visualizer
+
+To have a better understanding as of how IOU works, the file `iou_visualizer.html` contains a HTML/CSS/JS implementation of the IOU with two range sliders and visualization of the actual calculation.
 
 ## License
 

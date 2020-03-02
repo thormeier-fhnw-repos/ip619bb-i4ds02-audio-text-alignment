@@ -19,6 +19,14 @@ class TestGetAligner(unittest.TestCase):
 
     get_aligner_data_provider = lambda: (
         ("basic", FilesAligner, BasicAlignerStrategy),
+        ("random", FilesAligner, RandomAlignerStrategy),
+        ("google_biopython", GoogleFilesAligner, GoogleBiopythonAlignerStrategy),
+        ("google_global_character", GoogleFilesAligner, GoogleGlobalCharacterAlignerStrategy),
+        ("google_global_word", GoogleFilesAligner, GoogleGlobalWordAlignerStrategy),
+        ("google_semiglobal_character", GoogleFilesAligner, GoogleSemiglobalCharacterAlignerStrategy),
+        ("google_semiglobal_word", GoogleFilesAligner, GoogleSemiglobalWordAlignerStrategy),
+        ("google_local_character", GoogleFilesAligner, GoogleLocalCharacterAlignerStrategy),
+        ("google_local_word", GoogleFilesAligner, GoogleLocalWordAlignerStrategy)
     )
 
     @data_provider(get_aligner_data_provider)
@@ -34,8 +42,8 @@ class TestGetAligner(unittest.TestCase):
 
         aligner = get_aligner(config)
 
-        # self.assertIsInstance(aligner, expected_aligner)
-        # self.assertIsInstance(aligner.aligner, expected_strategy)
+        self.assertIsInstance(aligner, expected_aligner)
+        self.assertIsInstance(aligner.aligner, expected_strategy.__class__)
 
 
 if __name__ == '__main__':
