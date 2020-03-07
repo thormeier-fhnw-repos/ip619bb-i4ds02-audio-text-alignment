@@ -4,7 +4,9 @@ from string import punctuation
 def preprocess_string(input: str) -> str:
     """
     Preprocesses a given string to be fit for alignment.
+
     :param input: String to process
+
     :return: Processed string
     """
     input = input.replace("*", "")

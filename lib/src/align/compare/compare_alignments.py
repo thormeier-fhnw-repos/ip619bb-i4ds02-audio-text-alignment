@@ -15,12 +15,14 @@ from memory_profiler import profile
 def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, training_only: bool, config: Dict[str, Any]) -> Dict[str, Any]:
     """
     Compares all found alignments
+
     :param input_path:    Input path
     :param verbosity:     Verbosity level
     :param type1:         First type for comparison
     :param type2:         Second type for comparison
     :param training_only: Determines if a sentence has to be prefixed with [TEST] in order to be considered.
     :param config:        Configuration dict, see README
+
     :return: Dict of all results
     """
 
@@ -232,8 +234,10 @@ def compare_alignments(input_path: str, verbosity: int, type1: str, type2: str, 
 def does_sentence_appear(sentence: Sentence, epsilon: float) -> bool:
     """
     Checks if a sentence is marked as appearing
+
     :param sentence: The sentence under check
     :param epsilon:  Interval length epsilon to check
+
     :return: True if sentence exists, else false
     """
     if isinstance(sentence.interval.start, float) and isinstance(sentence.interval.end, float):

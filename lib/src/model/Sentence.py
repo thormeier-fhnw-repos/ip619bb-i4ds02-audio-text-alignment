@@ -10,6 +10,7 @@ class Sentence:
     def __init__(self, sentence: str, interval: Interval, additional_data: AdditionalData):
         """
         Defines a sentence with corresponding interval
+
         :param sentence:        String
         :param interval:        Interval
         :param additional_data: AdditionalData
@@ -21,7 +22,8 @@ class Sentence:
     def to_audacity_label_format(self) -> str:
         """
         Transforms this sentence to Audacity Label Format
-        :return: str
+
+        :return: Entire sentence + interval in Audacity label format
         """
         formatted = self.interval.to_formatted() + "\t" + str(self.sentence)
 
@@ -33,8 +35,10 @@ class Sentence:
     def merge_with(self, other: "Sentence") -> "Sentence":
         """
         Merges two sentences
-        :param other:
-        :return:
+
+        :param other: Another sentence
+
+        :return: Merged sentence
         """
         if not (isinstance(self.interval.start, float) and isinstance(other.interval.start, float)) or self.interval.start < other.interval.start:
             sentence = str(self.sentence).strip() + " " + str(other.sentence).strip()
@@ -51,7 +55,9 @@ class Sentence:
 def sentence_from_string(string: str) -> Sentence:
     """
     Creates a Sentence object from a given single line of an alignment
+
     :param string: Input string to parse
+
     :return: Sentence
     """
     parts = string.split("\t")

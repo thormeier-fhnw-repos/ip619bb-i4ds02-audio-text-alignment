@@ -8,12 +8,14 @@ def smith_waterman(a: List, b: List, match_reward: int, mismatch_penalty: int, g
                    compare_function: Callable) -> Tuple[List, List, int]:
     """
     Smith-Waterman algorithm for local sequence alignment
-    :param a: Sequence A, horizontal in score matrix, i.e. cols
-    :param b: Sequence B, vertical in score matrix, i.e. rows
-    :param match_reward: Reward given for a match
+
+    :param a:                Sequence A, horizontal in score matrix, i.e. cols
+    :param b:                Sequence B, vertical in score matrix, i.e. rows
+    :param match_reward:     Reward given for a match
     :param mismatch_penalty: Penalty given for a mismatch
-    :param gap_penalty: Penalty given for a gap
+    :param gap_penalty:      Penalty given for a gap
     :param compare_function: Function to compare two elements of sequences
+
     :return: List of possible alignments and their score.
     """
     score_matrix = create_score_matrix(a, b, match_reward, mismatch_penalty, gap_penalty, compare_function, False, True)

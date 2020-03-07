@@ -2,11 +2,15 @@ from typing import Any
 
 
 class Interval:
+    """
+    Defines and interval with a start and an end
+    """
     def __init__(self, start: Any, end: Any):
         """
-        Defines an interval with start and end.
+        Constructor
+
         :param start: float or character
-        :param end: float or character
+        :param end:   float or character
         """
         self.start = start
         self.end = end
@@ -14,7 +18,9 @@ class Interval:
     def get_intersection(self, other: "Interval") -> float:
         """
         Returns the relative intersection area of this pair with another.
+
         :param other: Interval
+
         :return: float
         """
         if not isinstance(self.start, float) \
@@ -33,7 +39,9 @@ class Interval:
     def get_union(self, other: "Interval") -> float:
         """
         Returns the total area of this pair with another.
+
         :param other: Interval
+
         :return: float
         """
         if not isinstance(self.start, float) \
@@ -50,6 +58,7 @@ class Interval:
     def get_length(self) -> float:
         """
         Calculates the length of a this interval
+
         :return: Length, or near-0 or 0 if not appearing at all
         """
         if isinstance(self.start, float) and isinstance(self.end, float):
@@ -60,7 +69,9 @@ class Interval:
     def get_deviation(self, other: "Interval"):
         """
         Calculates the deviation of this interval with some other interval
+
         :param other: The other interval
+
         :return: Amount of seconds of deviation
         """
         return abs(self.start - other.start) + abs(self.end - other.end)
@@ -68,6 +79,7 @@ class Interval:
     def to_formatted(self) -> str:
         """
         Formats this interval to later fit into audacity label format
+
         :return: Formatted version
         """
         start = self.start

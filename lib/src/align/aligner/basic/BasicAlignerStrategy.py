@@ -11,9 +11,20 @@ class BasicAlignerStrategy(AbstractAlignerStrategy):
     """
     Basic alignment based on sentence length.
     """
+
     @staticmethod
-    def perform_alignment(transcript: str, wav_path: str, verbosity: int) -> List[Sentence]:
+    def perform_alignment(transcript: str, wav_path: str, verbosity: int) -> List["Sentence"]:
+        """
+        Performs a basic alignment
+
+        :param transcript: Path to transcript
+        :param wav_path:   Path to wav file
+        :param verbosity:  Verbosity level
+
+        :return: Aligned sentences
+        """
         start_time = time.time()
+
         audio_segment = AudioSegment.from_wav(wav_path)
         duration = audio_segment.duration_seconds
 

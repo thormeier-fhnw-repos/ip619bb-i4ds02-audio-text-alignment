@@ -11,6 +11,16 @@ class GoogleBiopythonAlignerStrategy(AbstractGoogleAlignerStrategy):
     @staticmethod
     def perform_alignment(transcript: str, google_output: object, verbosity: int,
                           alignment_parameters: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Performs an alignment via Biopython's pairwise2
+
+        :param transcript:           Transcript as string
+        :param google_output:        Google STT output
+        :param verbosity:            Verbosity level
+        :param alignment_parameters: Config
+
+        :return: Alignments + score
+        """
         alignments = Bio.pairwise2.align.localms(
             google_output,
             transcript,
@@ -27,5 +37,5 @@ class GoogleBiopythonAlignerStrategy(AbstractGoogleAlignerStrategy):
         return {
             "google": alignment[0],
             "transcript": alignment[1],
-            "score": 0.0 # TODO: Get actual score
+            "score": alignment[2]
         }

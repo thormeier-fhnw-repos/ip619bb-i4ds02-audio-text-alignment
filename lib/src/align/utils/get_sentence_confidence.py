@@ -6,6 +6,7 @@ def get_sentence_confidence(google_start_confidence: float, google_end_confidenc
                             mismatch_penalty: int, gap_penalty: int) -> Dict[str, float]:
     """
     Calculates an overall confidence for a given sentence
+
     :param google_start_confidence:       Calculated confidence at the start of the sentence
     :param google_end_confidence:         Calculated confidence at the end of the sentence
     :param alignment_transcript_sentence: Aligned version of the transcript sentence
@@ -13,7 +14,8 @@ def get_sentence_confidence(google_start_confidence: float, google_end_confidenc
     :param match_reward:                  Match reward used to calculate the alignment score
     :param mismatch_penalty:              Mismatch penalty used to calculate the alignment score
     :param gap_penalty:                   Gap penalty used to calculate the alignment score
-    :return: Dict of various scorings
+
+    :return: Dict of various scores
     """
 
     # Count all gaps: they contribute to overall score

@@ -7,16 +7,18 @@ def walk_matrix(score_matrix: np.ndarray, start_col: int, start_row: int, a: Lis
                 ) -> Tuple[List, List, int]:
     """
     Backtracing for matrices created with create_score_matrix
-    :param score_matrix: The score matrix to walk back on
-    :param start_col: Starting position of the backtrace
-    :param start_row: Starting position of the backtrace
-    :param a: Sequence A
-    :param b: Sequence B
-    :param match_reward: Reward given if a match occurs
+
+    :param score_matrix:     The score matrix to walk back on
+    :param start_col:        Starting position of the backtrace
+    :param start_row:        Starting position of the backtrace
+    :param a:                Sequence A
+    :param b:                Sequence B
+    :param match_reward:     Reward given if a match occurs
     :param mismatch_penalty: Penalty if a mismatch occurs
-    :param gap_penalty: Gap penalty
+    :param gap_penalty:      Gap penalty
     :param compare_function: Function to compare two elements of sequences
-    :param allow_negative: If a negative score is allowed
+    :param allow_negative:   If a negative score is allowed
+
     :return: Aligned versions of sequences A and B, as well as the achieved score.
     """
     aligned_a = []

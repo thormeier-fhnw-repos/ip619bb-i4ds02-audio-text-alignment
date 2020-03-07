@@ -16,20 +16,23 @@ def optimize_parameters(
 ) -> None:
     """
     Tries to find the best parameters for google alignment.
+
     :param input_path:            Path to load all alignments from
     :param output_path:           Path to write the alignments to
     :param google_files_aligner:  GoogleFLiesAligner to re-align every epoch
     :param alignment_parameters:  Alignment parameters for comparison
     :param convergence_plot_file: Where to save the convergence plot
     :param verbosity:             Verbosity of the output
+
     :return: None
     """
-
     def optimize_function(params: List) -> float:
         """
         Function to optimize against
+
         :param params: Parameters given by BOpt
-        :return: 1 - Mean IOU * F1
+
+        :return: Calculated score
         """
         bin_print(verbosity, 1, "Starting new iteration...")
 

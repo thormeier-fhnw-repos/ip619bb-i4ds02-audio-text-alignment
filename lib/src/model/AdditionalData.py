@@ -7,6 +7,7 @@ class AdditionalData:
                  gaps_google: float) -> None:
         """
         Constructor
+
         :param google_confidence:         Google's average recognition confidence
         :param normalized_sentence_score: Normalized alignment score for the given sentence
         :param gaps_transcript:           Percentage of gaps, relative to total length (characters + gaps)
@@ -20,6 +21,7 @@ class AdditionalData:
     def to_formatted(self) -> str:
         """
         Formats itself to audacity label format
+
         :return: Formatted data
         """
         return str(self.google_confidence) + \

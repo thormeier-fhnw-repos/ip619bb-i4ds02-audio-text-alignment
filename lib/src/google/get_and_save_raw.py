@@ -9,12 +9,13 @@ from google.api_core.future.polling import _OperationNotComplete
 def get_and_save_raw(input_path: str, bucket_name: str, out_path: str, verbosity: int) -> None:
     """
     Gets raw JSON from Google Cloud Speech-to-text API
-    :param input_path: str Path to read files from
-    :param bucket_name: str Name of the GCS bucket
-    :param verbosity: int Verbosity level
-    :return:
-    """
 
+    :param input_path:  Path to read files from
+    :param bucket_name: Name of the GCS bucket
+    :param verbosity:   Verbosity level
+
+    :return: None
+    """
     bin_print(verbosity, 1, "Reading files from", input_path)
 
     bin_print(verbosity, 2, "Trying to find all .flac files...")

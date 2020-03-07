@@ -29,7 +29,7 @@ Args:
     --training-only: Only ever compares sentences marked with [TRAINING] in the first type of the alignment
     -h:              Prints this help
     """
-    args = ["path=", "type1=", "type2=", "config=",  "with-list", "get-low-means", "training-only"]
+    args = ["path=", "type1=", "type2=", "config=", "with-list", "get-low-means", "training-only"]
     input_args = intro(title, description, args, argv)
 
     config = load_config(input_args["config"])
@@ -39,7 +39,8 @@ Args:
     input_args["training-only"] = True if "training-only" in input_args else False
 
     start = time.time()
-    results = compare_alignments(input_args["path"], input_args["verbosity"], input_args["type1"], input_args["type2"], input_args["training-only"], config)
+    results = compare_alignments(input_args["path"], input_args["verbosity"], input_args["type1"], input_args["type2"],
+                                 input_args["training-only"], config)
 
     verbosity = input_args["verbosity"]
 
@@ -70,8 +71,10 @@ Args:
 
     tPrecisionRecall = PrettyTable()
     tPrecisionRecall.field_names = ["", "Condition positive", "Condition negative"]
-    tPrecisionRecall.add_row(["Predicted positive", results["appearance"]["true_positives"], results["appearance"]["false_positives"]])
-    tPrecisionRecall.add_row(["Predicted negative", results["appearance"]["false_negatives"], results["appearance"]["true_negatives"]])
+    tPrecisionRecall.add_row(
+        ["Predicted positive", results["appearance"]["true_positives"], results["appearance"]["false_positives"]])
+    tPrecisionRecall.add_row(
+        ["Predicted negative", results["appearance"]["false_negatives"], results["appearance"]["true_negatives"]])
 
     bin_print(verbosity, 0, "Sentences appearing")
     bin_print(verbosity, 0, "\n" + str(tPrecisionRecall))
@@ -87,9 +90,10 @@ Args:
         bin_print(verbosity, 0, "Outputting copy/pastable list of low (<0.3) mean IOU files:")
         print(results["ious"]["low"])
 
-    tPearson = PrettyTable()
-    tPearson.field_names = ["", "IOU", "Deviation", "Alignment score", "Google confidence", "Calculated confidence", "Google gaps percentage", "Transcript gaps percentage", "Calculated score"]
-    tPearson.add_row([
+    t_pearson = PrettyTable()
+    t_pearson.field_names = ["", "IOU", "Deviation", "Alignment score", "Google confidence", "Calculated confidence",
+                             "Google gaps percentage", "Transcript gaps percentage", "Calculated score"]
+    t_pearson.add_row([
         "IOU",
         pearsonr_lists(results["ious"]["all_only"], results["ious"]["all_only"]),
         pearsonr_lists(results["ious"]["all_only"], results["scores"]["deviation"]["all"]),
@@ -100,7 +104,7 @@ Args:
         pearsonr_lists(results["ious"]["all_only"], results["scores"]["transcript_gaps"]["all"]),
         pearsonr_lists(results["ious"]["all_only"], results["scores"]["calculated"]["all"])
     ])
-    tPearson.add_row([
+    t_pearson.add_row([
         "Deviation",
         pearsonr_lists(results["scores"]["deviation"]["all"], results["ious"]["all_only"]),
         pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["deviation"]["all"]),
@@ -111,7 +115,7 @@ Args:
         pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["transcript_gaps"]["all"]),
         pearsonr_lists(results["scores"]["deviation"]["all"], results["scores"]["calculated"]["all"])
     ])
-    tPearson.add_row([
+    t_pearson.add_row([
         "Alignment score",
         pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["ious"]["all_only"]),
         pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["deviation"]["all"]),
@@ -122,7 +126,7 @@ Args:
         pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["transcript_gaps"]["all"]),
         pearsonr_lists(results["scores"]["alignment_scores"]["all"], results["scores"]["calculated"]["all"])
     ])
-    tPearson.add_row([
+    t_pearson.add_row([
         "Google confidence",
         pearsonr_lists(results["scores"]["google_confidence"]["all"], results["ious"]["all_only"]),
         pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["deviation"]["all"]),
@@ -133,7 +137,7 @@ Args:
         pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["transcript_gaps"]["all"]),
         pearsonr_lists(results["scores"]["google_confidence"]["all"], results["scores"]["calculated"]["all"])
     ])
-    tPearson.add_row([
+    t_pearson.add_row([
         "Calculated confidence",
         pearsonr_lists(results["scores"]["calculated"]["all"], results["ious"]["all_only"]),
         pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["deviation"]["all"]),
@@ -144,7 +148,7 @@ Args:
         pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["transcript_gaps"]["all"]),
         pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["calculated"]["all"])
     ])
-    tPearson.add_row([
+    t_pearson.add_row([
         "Google gaps percentage",
         pearsonr_lists(results["scores"]["google_gaps"]["all"], results["ious"]["all_only"]),
         pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["deviation"]["all"]),
@@ -155,7 +159,7 @@ Args:
         pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["transcript_gaps"]["all"]),
         pearsonr_lists(results["scores"]["google_gaps"]["all"], results["scores"]["calculated"]["all"])
     ])
-    tPearson.add_row([
+    t_pearson.add_row([
         "Transcript gaps percentage",
         pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["ious"]["all_only"]),
         pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["deviation"]["all"]),
@@ -166,7 +170,7 @@ Args:
         pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["transcript_gaps"]["all"]),
         pearsonr_lists(results["scores"]["transcript_gaps"]["all"], results["scores"]["calculated"]["all"])
     ])
-    tPearson.add_row([
+    t_pearson.add_row([
         "Calculated score",
         pearsonr_lists(results["scores"]["calculated"]["all"], results["ious"]["all_only"]),
         pearsonr_lists(results["scores"]["calculated"]["all"], results["scores"]["deviation"]["all"]),
@@ -179,7 +183,7 @@ Args:
     ])
 
     bin_print(verbosity, 0, "Score correlations")
-    bin_print(verbosity, 0, "\n" + str(tPearson))
+    bin_print(verbosity, 0, "\n" + str(t_pearson))
 
     end = time.time()
 

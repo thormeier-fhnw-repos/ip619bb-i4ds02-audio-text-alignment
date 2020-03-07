@@ -23,9 +23,11 @@ class AbstractAlignerStrategy(abc.ABC):
     def perform_alignment(transcript: str, wav_path: str, verbosity: int) -> List[Sentence]:
         """
         Aligns a given transcript to a given wav
+        
         :param transcript: Transcript as string
         :param wav_path:   Path to given wav file
         :param verbosity:  Verbosity of output
+        
         :return: List of aligned sentences
         """""
         pass
@@ -35,10 +37,11 @@ class AbstractAlignerStrategy(abc.ABC):
         """
         Calls inner implementation of perform_alignment. Allows for specific overrideable
         default behaviour of different kinds of aligners.
+
         :param transcript: Transcript as string
         :param wav_path:   Path to given wav file
         :param verbosity:  Verbosity of output
-        :return:
+
+        :return: List of aligned sentences
         """
         return cls.perform_alignment(transcript, wav_path, verbosity)
-

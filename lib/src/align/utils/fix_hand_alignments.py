@@ -9,10 +9,12 @@ import numpy as np
 def fix_hand_alignments(input_path: str, fix_nonexisting: bool, reshuffle_training: bool, verbosity: int) -> None:
     """
     "Fixes" hand alignment by either reshuffling training or assigning some different
+
     :param input_path:         Where to find and write the data
     :param fix_nonexisting:    If nonexisting sentences should be makred with "-" instead
     :param reshuffle_training: If the training data should be reshuffled
     :param verbosity:          Verbosity of the output
+
     :return: None
     """
     bin_print(verbosity, 1, "Reading files from", input_path)

@@ -13,18 +13,21 @@ def optimize_score(
 ) -> None:
     """
     Tries to find the best parameters for overall score.
+
     :param input_path:            Path to load all alignments from
     :param alignment_parameters:  Alignment parameters for comparison
     :param convergence_plot_file: Where to save the convergence plot
     :param verbosity:             Verbosity of the output
+
     :return: None
     """
-
     def optimize_function(params: List) -> float:
         """
         Function to optimize against
+
         :param params: Parameters given by BOpt
-        :return: 1 - correlation
+
+        :return: Calculated score
         """
         bin_print(verbosity, 2, "Parameters: ", params)
 

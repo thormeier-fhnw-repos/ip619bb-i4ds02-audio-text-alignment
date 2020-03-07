@@ -4,8 +4,10 @@ from typing import List
 def prettify_alignment(a: List, b: List) -> str:
     """
     Makes two alignments prettier to print next to each other
+
     :param a: Alignment (Google side)
     :param b: Alignment (Transcript side)
+
     :return: Prettified alignment
     """
     a = ["-" if el is None else el for el in a]

@@ -14,10 +14,11 @@ class GoogleFilesAligner(FilesAligner):
     Aligns files with Google output specifically
     """
 
-    def __init__(self, aligner: Type[AbstractGoogleAlignerStrategy], alignment_parameters = Dict[str, Any]):
+    def __init__(self, aligner: Type[AbstractGoogleAlignerStrategy], alignment_parameters: Dict[str, Any]):
         """
         Constructor
-        :param aligner: AbstractAlignerStrategy to use in order to create alignments
+
+        :param aligner:              AbstractAlignerStrategy to use in order to create alignments
         :param alignment_parameters: Dict of parameters loaded from a given YAML file. See README.
         """
         super(GoogleFilesAligner, self).__init__(aligner, "google")
@@ -27,18 +28,16 @@ class GoogleFilesAligner(FilesAligner):
     def align_files(self, input_path: str, output_path: str, verbosity: int) -> None:
         """
         Aligns all given files in input_path and writes alignments into output_path
+
         :param input_path:           Where to look for transcript files
         :param output_path:          Where to write alignment files
         :param verbosity:            Verbosity of debugging output
+
         :return: None
         """
         bin_print(verbosity, 1, "Loading all transcript files from " + input_path + "...")
         file_names = [f.replace(".wav", "") for f in listdir(input_path) if
-                      isfile(join(input_path, f)) and f.split(".")[1] == "wav"
-                      # and (
-                      #     f.startswith("podclub") or f.startswith("stadt_zuerich")
-                      # )
-                      ]
+                      isfile(join(input_path, f)) and f.split(".")[1] == "wav"]
 
         bin_print(verbosity, 3, "Found files:", file_names)
 

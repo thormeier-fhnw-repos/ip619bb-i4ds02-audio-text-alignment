@@ -9,8 +9,18 @@ class GoogleLocalCharacterAlignerStrategy(AbstractGoogleAlignerStrategy):
     """
 
     @staticmethod
-    def perform_alignment(transcript: str, google_output: object, verbosity: int,
+    def perform_alignment(transcript: str, google_output: str, verbosity: int,
                           alignment_parameters: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Perform the alignment
+
+        :param transcript:           Transcript
+        :param google_output:        Googles output as string
+        :param verbosity:            Verbosity level
+        :param alignment_parameters: Config
+
+        :return: Alignments + score
+        """
         def compare(a: str, b: str) -> bool:
             """
             Checks if two characters are equal

@@ -31,7 +31,8 @@ Args:
 
     start = time.time()
 
-    fix_hand_alignments(input_args["path"], input_args["fix-nonexisting"], input_args["reshuffle-training"], input_args["verbosity"])
+    fix_hand_alignments(input_args["path"], input_args["fix-nonexisting"], input_args["reshuffle-training"],
+                        input_args["verbosity"])
     end = time.time()
 
     bin_print(input_args["verbosity"], 0, "Done.")

@@ -7,14 +7,16 @@ def create_score_matrix(a: List, b: List, match_reward: int, mismatch_penalty: i
                         ) -> np.ndarray:
     """
     Creates a score matrix, fit for all kinds of alignments
-    :param a: Sequence A, horizontal in score matrix, i.e. cols
-    :param b: Sequence B, vertical in score matrix, i.e. rows
-    :param match_reward: Reward to give in case of match
+
+    :param a:                Sequence A, horizontal in score matrix, i.e. cols
+    :param b:                Sequence B, vertical in score matrix, i.e. rows
+    :param match_reward:     Reward to give in case of match
     :param mismatch_penalty: Penalty to give in case of mismatch
-    :param gap_penalty: Penalty to give in case of gap introduction
+    :param gap_penalty:      Penalty to give in case of gap introduction
     :param compare_function: Function to compare two elements of sequences
-    :param allow_negative: If negative values are allowed. If not, a 0 is used instead.
-    :param zero_borders: If the borders should be left at 0. Needed for semi-global and local alignment.
+    :param allow_negative:   If negative values are allowed. If not, a 0 is used instead.
+    :param zero_borders:     If the borders should be left at 0. Needed for semi-global and local alignment.
+
     :return: Score matrix
     """
     cols = len(a) + 1
@@ -31,12 +33,14 @@ def create_score_matrix(a: List, b: List, match_reward: int, mismatch_penalty: i
     else:
         score_matrix = score_matrix.transpose()
 
-    def get_diag_score(a, b):
+    def get_diag_score(a, b) -> int:
         """
         Get score for diagonal move.
+
         :param a: Sequence element from A
         :param b: Sequence element from B
-        :return:
+
+        :return: Score
         """
         return match_reward if compare_function(a, b) else mismatch_penalty
 

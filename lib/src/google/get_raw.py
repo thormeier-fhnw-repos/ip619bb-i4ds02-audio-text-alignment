@@ -7,11 +7,12 @@ from google.protobuf.json_format import MessageToJson
 def get_raw(file_name: str, client: speech.SpeechClient) -> str:
     """
     Get the raw Speech to text result from Google Cloud API
-    :param file_name: str File name + path
-    :param client: speech.SpeechClient Google Cloud API Speech client
+
+    :param file_name: File name + path
+    :param client:    Google Cloud API Speech client
+
     :return: str JSON encoded response
     """
-
     audio = types.RecognitionAudio(uri=file_name)
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.FLAC,

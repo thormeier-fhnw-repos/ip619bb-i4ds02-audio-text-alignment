@@ -14,6 +14,15 @@ class RandomAlignerStrategy(AbstractAlignerStrategy):
     """
     @staticmethod
     def perform_alignment(transcript: str, wav_path: str, verbosity: int) -> List[Sentence]:
+        """
+        Performs the alignment
+
+        :param transcript: Transcript path
+        :param wav_path:   Path to wav file
+        :param verbosity:  Verbosity level
+
+        :return: Aligned sentences
+        """
         start_time = time.time()
         audio_segment = AudioSegment.from_wav(wav_path)
         duration = audio_segment.duration_seconds

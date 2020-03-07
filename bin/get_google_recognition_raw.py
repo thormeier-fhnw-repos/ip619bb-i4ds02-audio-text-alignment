@@ -43,6 +43,7 @@ Args:
     bin_print(input_args["verbosity"], 0, "Done.")
     bin_print(input_args["verbosity"], 1, "Time elapsed:", (end - start))
 
+
 if __name__ == "__main__":
     print("")
     main(sys.argv[1:])

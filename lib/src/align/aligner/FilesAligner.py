@@ -13,6 +13,7 @@ class FilesAligner:
     def __init__(self, aligner: Type[AbstractAlignerStrategy], alignment_type: str):
         """
         Constructor
+
         :param aligner:        AbstractAlignerStrategy to use in order to create alignments
         :param alignment_type: Type of the alignment, used for naming files.
         """
@@ -22,9 +23,11 @@ class FilesAligner:
     def align_files(self, input_path: str, output_path: str, verbosity: int) -> None:
         """
         Aligns all given files in input_path and writes alignments into output_path
+
         :param input_path:  Where to look for transcript files
         :param output_path: Where to write alignment files
         :param verbosity:   Verbosity of debugging output
+
         :return: None
         """
         bin_print(verbosity, 1, "Reading files from", input_path)

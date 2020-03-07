@@ -3,10 +3,12 @@ from lib.src.model.Interval import Interval
 
 def intersection_over_union(ground_truth: Interval, prediction: Interval) -> float:
     """
-    Calculates the IOU score for two pairs, groundtruth and prediction
+    Calculates the IOU score for two pairs, ground truth and prediction
+
     :param ground_truth: Interval
-    :param prediction: Interval
-    :return: float
+    :param prediction:   Interval
+
+    :return: IOU
     """
     intersection = ground_truth.get_intersection(prediction)
     union = ground_truth.get_union(prediction)

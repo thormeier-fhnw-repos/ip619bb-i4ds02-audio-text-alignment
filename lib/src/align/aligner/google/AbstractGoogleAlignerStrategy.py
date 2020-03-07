@@ -29,23 +29,27 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                           alignment_parameters: Dict[str, Any]) -> Dict[str, Any]:
         """
         Aligns a given transcript to a given wav
+        
         :param transcript:           The transcript as string
         :param google_output:        Google's general output as JSON object
         :param verbosity:            Verbosity of the output
         :param alignment_parameters: Dict of parameters loaded from a given YAML file. See README for full config.
-        :return: List of aligned Sentences
+        
+        :return: Alignments + score
         """""
         pass
 
     @classmethod
     def align(cls, google_output: object, transcript: str, verbosity: int,
-              alignment_parameters: Dict[str, Any]) -> List[Sentence]:
+              alignment_parameters: Dict[str, Any]) -> List["Sentence"]:
         """
         Adjusted way of actually aligning with Google output.
+
         :param transcript:           Transcript as string
         :param google_output:        Google output as JSON object
         :param verbosity:            Verbosity of output
         :param alignment_parameters: Dict of parameters loaded from a given YAML file. See README for full config.
+
         :return: List of aligned sentences
         """
         sentences = cls.get_sentences(transcript)
@@ -74,13 +78,15 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         bin_print(verbosity, 3, prettify_alignment(google_alignment, transcript_alignment))
 
         return cls.align_per_sentence(sentences, transcript_alignment, google_alignment,
-                           google_words, alignment_parameters, alignment_score, verbosity)
+                                      google_words, alignment_parameters, alignment_score, verbosity)
 
     @staticmethod
     def get_google_words(google_output: object) -> List[dict]:
         """
         Preprocesses the Google output to further work with it.
+
         :param google_output: JSON object
+
         :return: List of dict for all words in a google_output.
         """
         words = []
@@ -100,7 +106,9 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
     def get_sentences(transcript: str) -> List[Sentence]:
         """
         Create a list of Sentence objects from a given transcript
+
         :param transcript: Transcript as string
+
         :return: List of Sentence instances
         """
         return transcript_to_sentences(transcript.replace("\n", " "))
@@ -109,7 +117,9 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
     def get_google_text(google_words: List) -> str:
         """
         Get a complete text out of Google output.
+
         :param google_words: List of Google output words, straight from JSON object.
+
         :return: Google output as string
         """
         google_word_list = [w["word"] for w in google_words if not all(c in punctuation for c in w["word"])]
@@ -119,7 +129,9 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
     def get_transcript_text(transcript: str) -> str:
         """
         Get preprocessed transcript as string
+
         :param transcript: Transcript string
+
         :return: Preprocessed transcript
         """
         return preprocess_string(transcript)
@@ -129,9 +141,11 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                                     last_end_time: float) -> None:
         """
         Mark a sentence as "no appearing"
+
         :param sentence:             Sentence to mark
         :param alignment_parameters: Dict of parameters loaded from a given YAML file. See README for full config.
         :param last_end_time:        Last end time that has been assigned to a given sentence
+
         :return: None
         """
         if alignment_parameters["no_appearance"]["type"] == "time":
@@ -143,9 +157,11 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
 
     @classmethod
     def align_per_sentence(cls, sentences: List[Sentence], transcript_alignment: str, google_alignment: str,
-                           google_words: List[object], alignment_parameters: Dict[str, Any], alignment_score: int, verbosity: int) -> List[Sentence]:
+                           google_words: List[object], alignment_parameters: Dict[str, Any], alignment_score: int,
+                           verbosity: int) -> List[Sentence]:
         """
         Assigns start and end times to sentences based on given alignments.
+
         :param sentences:            All sentences
         :param transcript_alignment: Aligned transcript
         :param google_alignment:     Aligned google output
@@ -153,7 +169,8 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
         :param alignment_parameters: Dict of parameters loaded from a given YAML file. See README for full config.
         :param alignment_score:      Score of the alignment
         :param verbosity:            Verbosity of output
-        :return: None
+
+        :return: List of aligned sentences
         """
         last_end_point = 0
         last_end_time = 0.0
@@ -257,7 +274,7 @@ class AbstractGoogleAlignerStrategy(AbstractAlignerStrategy):
                     sentence.sentence = "[BAD]" + sentence.sentence
                     sentence_index += 1
                 else:
-                    del(sentences[sentence_index])
+                    del (sentences[sentence_index])
             else:
                 sentence_index += 1
 

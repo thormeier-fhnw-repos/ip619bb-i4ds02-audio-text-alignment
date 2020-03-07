@@ -6,7 +6,8 @@ from lib.src.align.aligner.google.GoogleFilesAligner import GoogleFilesAligner
 from lib.src.align.aligner.google.GoogleBiopythonAlignerStrategy import GoogleBiopythonAlignerStrategy
 from lib.src.align.aligner.google.GoogleGlobalCharacterAlignerStrategy import GoogleGlobalCharacterAlignerStrategy
 from lib.src.align.aligner.google.GoogleGlobalWordAlignerStrategy import GoogleGlobalWordAlignerStrategy
-from lib.src.align.aligner.google.GoogleSemiglobalCharacterAlignerStrategy import GoogleSemiglobalCharacterAlignerStrategy
+from lib.src.align.aligner.google.GoogleSemiglobalCharacterAlignerStrategy import \
+    GoogleSemiglobalCharacterAlignerStrategy
 from lib.src.align.aligner.google.GoogleSemiglobalWordAlignerStrategy import GoogleSemiglobalWordAlignerStrategy
 from lib.src.align.aligner.google.GoogleLocalCharacterAlignerStrategy import GoogleLocalCharacterAlignerStrategy
 from lib.src.align.aligner.google.GoogleLocalWordAlignerStrategy import GoogleLocalWordAlignerStrategy
@@ -51,7 +52,9 @@ def _google_local_character(alignment_parameters):
 def get_aligner(alignment_parameters: Dict[str, Any]):
     """
     Generates a file aligner based on the given type.
+
     :param alignment_parameters: Dict of parameters loaded from a given YAML file. See README for full config.
+
     :return: FilesAligner, preconfigured
     """
     switcher = {

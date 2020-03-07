@@ -9,12 +9,14 @@ def semi_global(a: List, b: List, match_reward: int, mismatch_penalty: int, gap_
                 compare_function: Callable) -> Tuple[List, List, int]:
     """
     Needleman-Wunsch implementation for semi-global sequence alignment
-    :param a: Sequence A, horizontal in score matrix, i.e. cols
-    :param b: Sequence B, vertical in score matrix, i.e. rows
-    :param match_reward: Reward given for a match
+
+    :param a:                Sequence A, horizontal in score matrix, i.e. cols
+    :param b:                Sequence B, vertical in score matrix, i.e. rows
+    :param match_reward:     Reward given for a match
     :param mismatch_penalty: Penalty given for a mismatch
-    :param gap_penalty: Penalty given for a gap
+    :param gap_penalty:      Penalty given for a gap
     :param compare_function: Function to compare two elements of sequences
+
     :return: Both aligned sequences and the overall score
     """
     score_matrix = create_score_matrix(a, b, match_reward, mismatch_penalty, gap_penalty, compare_function, True, True)

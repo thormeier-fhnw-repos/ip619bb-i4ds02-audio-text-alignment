@@ -6,6 +6,7 @@ def calculate_overall_score(
     ) -> float:
     """
     Calculates a score to predict if an alignment is "good" or not.
+
     :param google_gaps_percentage:     Percentage of gaps added to google's STT output
     :param transcript_gaps_percentage: Percentage of gaps added to the transcript
     :param google_confidence:          Confidence of google's STT
@@ -14,6 +15,7 @@ def calculate_overall_score(
     :param weight_transcript_gaps:     Weight for weighted sum
     :param weight_google_confidence:   Weight for weighted sum
     :param weight_alignment_score:     Weight for weighted sum
+
     :return: Score between 0 and 1
     """
     return (
