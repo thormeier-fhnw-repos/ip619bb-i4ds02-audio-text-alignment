@@ -1,6 +1,6 @@
 prettytable==0.7.2
 pydub==0.23.1
-numpy==1.18.1+mkl
+numpy==1.22.0rc1
 nltk==3.4.5
 Bio==0.1.0
 PyYAML==5.3
